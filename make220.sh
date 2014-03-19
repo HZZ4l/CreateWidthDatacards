@@ -1,7 +1,7 @@
 #!/bin/bash
 
 
-python make_width2D_DCsandWSs.py -i SM_inputs_8TeV -a $1 -d 2 -b 
+python make_width2D_DCsandWSs.py -i SM_inputs_8TeV -a $1 -d 1 -b 
 
 #cd test1D/HCG/240 or test2D/HCG/240
 cd cards_"$1"/HCG/220
@@ -14,6 +14,6 @@ text2workspace.py -m 220 hzz4l_allS_8TeV.txt -P HiggsAnalysis.CombinedLimit.Higg
 
 combine -M GenerateOnly hzz4l_allS_8TeV.root -m 220 -t -1 --expectSignal=1 --saveToys -V -v 7
 root -b -l -q ../../../utils/addToyDataset.C\(\"hzz4l_allS_8TeV.root\",\"higgsCombineTest.GenerateOnly.mH220.123456.root\",\"toy_asimov\",\"workspaceWithAsimov.root\"\)
-combine -M MultiDimFit workspaceWithAsimov.root --algo=grid --points 200 -m 220 -n 1D_exp -D toys/toy_asimov -v 3 -S 0 --fastScan
+combine -M MultiDimFit workspaceWithAsimov.root --algo=grid --points 100 -m 220 -n 2D_exp -D toys/toy_asimov -v 3 -S 0 --fastScan
 #(add "-S 0 --fastScan" if no systematics)
 root ../../../utils/plotScan1D.C\(220,30\)
