@@ -1,0 +1,76 @@
+imax 1
+jmax *
+kmax *
+-------------------------------
+shapes * * hzz2l2v_125_8TeV.root eeeq0jets/$PROCESS eeeq0jets/$PROCESS_$SYSTEMATIC
+-------------------------------
+bin 1
+Observation 160.000000
+-------------------------------
+                                                    bin         1        1        1        1        1        1        1        1        1        1 
+                                                process     ggH_b    ggH_s  ggH_sbi    qqH_b    qqH_s  qqH_sbi  zz2l2nu   wz3lnu   topwww      zll 
+                                                process        -5       -4       -3       -2       -1        0        1        2        3        4 
+                                                   rate  10.658864 1.692958 10.222289 0.034212 0.013372 0.026942 66.923325 31.986007 43.710000 7.487826 
+-------------------------------
+CMS_eff_e                                     lnN        1.046000 1.046000 1.046000 1.046000 1.046000 1.046000 1.046000 1.046000        -        - 
+CMS_hzz2l2v_pu                                shapeN2           1        1        1        1        1        1        1        1        -        - 
+CMS_hzz2l2v_stat_eeeq0jets_ggH_b              shapeN2           1        -        -        -        -        -        -        -        -        - 
+CMS_hzz2l2v_stat_eeeq0jets_ggH_b_b0_8TeV      shapeN2           1        -        -        -        -        -        -        -        -        - 
+CMS_hzz2l2v_stat_eeeq0jets_ggH_b_b1_8TeV      shapeN2           1        -        -        -        -        -        -        -        -        - 
+CMS_hzz2l2v_stat_eeeq0jets_ggH_s              shapeN2           -        1        -        -        -        -        -        -        -        - 
+CMS_hzz2l2v_stat_eeeq0jets_ggH_sbi            shapeN2           -        -        1        -        -        -        -        -        -        - 
+CMS_hzz2l2v_stat_eeeq0jets_ggH_sbi_b0_8TeV    shapeN2           -        -        1        -        -        -        -        -        -        - 
+CMS_hzz2l2v_stat_eeeq0jets_qqH_b              shapeN2           -        -        -        1        -        -        -        -        -        - 
+CMS_hzz2l2v_stat_eeeq0jets_qqH_b_b0_8TeV      shapeN2           -        -        -        1        -        -        -        -        -        - 
+CMS_hzz2l2v_stat_eeeq0jets_qqH_b_b1_8TeV      shapeN2           -        -        -        1        -        -        -        -        -        - 
+CMS_hzz2l2v_stat_eeeq0jets_qqH_b_b2_8TeV      shapeN2           -        -        -        1        -        -        -        -        -        - 
+CMS_hzz2l2v_stat_eeeq0jets_qqH_b_b3_8TeV      shapeN2           -        -        -        1        -        -        -        -        -        - 
+CMS_hzz2l2v_stat_eeeq0jets_qqH_b_b4_8TeV      shapeN2           -        -        -        1        -        -        -        -        -        - 
+CMS_hzz2l2v_stat_eeeq0jets_qqH_b_b5_8TeV      shapeN2           -        -        -        1        -        -        -        -        -        - 
+CMS_hzz2l2v_stat_eeeq0jets_qqH_b_b6_8TeV      shapeN2           -        -        -        1        -        -        -        -        -        - 
+CMS_hzz2l2v_stat_eeeq0jets_qqH_s              shapeN2           -        -        -        -        1        -        -        -        -        - 
+CMS_hzz2l2v_stat_eeeq0jets_qqH_s_b0_8TeV      shapeN2           -        -        -        -        1        -        -        -        -        - 
+CMS_hzz2l2v_stat_eeeq0jets_qqH_s_b1_8TeV      shapeN2           -        -        -        -        1        -        -        -        -        - 
+CMS_hzz2l2v_stat_eeeq0jets_qqH_s_b2_8TeV      shapeN2           -        -        -        -        1        -        -        -        -        - 
+CMS_hzz2l2v_stat_eeeq0jets_qqH_s_b3_8TeV      shapeN2           -        -        -        -        1        -        -        -        -        - 
+CMS_hzz2l2v_stat_eeeq0jets_qqH_s_b4_8TeV      shapeN2           -        -        -        -        1        -        -        -        -        - 
+CMS_hzz2l2v_stat_eeeq0jets_qqH_s_b5_8TeV      shapeN2           -        -        -        -        1        -        -        -        -        - 
+CMS_hzz2l2v_stat_eeeq0jets_qqH_s_b6_8TeV      shapeN2           -        -        -        -        1        -        -        -        -        - 
+CMS_hzz2l2v_stat_eeeq0jets_qqH_s_b7_8TeV      shapeN2           -        -        -        -        1        -        -        -        -        - 
+CMS_hzz2l2v_stat_eeeq0jets_qqH_sbi            shapeN2           -        -        -        -        -        1        -        -        -        - 
+CMS_hzz2l2v_stat_eeeq0jets_qqH_sbi_b0_8TeV    shapeN2           -        -        -        -        -        1        -        -        -        - 
+CMS_hzz2l2v_stat_eeeq0jets_qqH_sbi_b1_8TeV    shapeN2           -        -        -        -        -        1        -        -        -        - 
+CMS_hzz2l2v_stat_eeeq0jets_qqH_sbi_b2_8TeV    shapeN2           -        -        -        -        -        1        -        -        -        - 
+CMS_hzz2l2v_stat_eeeq0jets_qqH_sbi_b3_8TeV    shapeN2           -        -        -        -        -        1        -        -        -        - 
+CMS_hzz2l2v_stat_eeeq0jets_qqH_sbi_b4_8TeV    shapeN2           -        -        -        -        -        1        -        -        -        - 
+CMS_hzz2l2v_stat_eeeq0jets_qqH_sbi_b5_8TeV    shapeN2           -        -        -        -        -        1        -        -        -        - 
+CMS_hzz2l2v_stat_eeeq0jets_qqH_sbi_b6_8TeV    shapeN2           -        -        -        -        -        1        -        -        -        - 
+CMS_hzz2l2v_stat_eeeq0jets_topwww_b0_8TeV     shapeN2           -        -        -        -        -        -        -        -        1        - 
+CMS_hzz2l2v_stat_eeeq0jets_topwww_b1_8TeV     shapeN2           -        -        -        -        -        -        -        -        1        - 
+CMS_hzz2l2v_stat_eeeq0jets_topwww_b2_8TeV     shapeN2           -        -        -        -        -        -        -        -        1        - 
+CMS_hzz2l2v_stat_eeeq0jets_topwww_b3_8TeV     shapeN2           -        -        -        -        -        -        -        -        1        - 
+CMS_hzz2l2v_stat_eeeq0jets_wz3lnu             shapeN2           -        -        -        -        -        -        -        1        -        - 
+CMS_hzz2l2v_stat_eeeq0jets_wz3lnu_b0_8TeV     shapeN2           -        -        -        -        -        -        -        1        -        - 
+CMS_hzz2l2v_stat_eeeq0jets_zll                shapeN2           -        -        -        -        -        -        -        -        -        1 
+CMS_hzz2l2v_stat_eeeq0jets_zll_b0_8TeV        shapeN2           -        -        -        -        -        -        -        -        -        1 
+CMS_hzz2l2v_stat_eeeq0jets_zll_b1_8TeV        shapeN2           -        -        -        -        -        -        -        -        -        1 
+CMS_hzz2l2v_stat_eeeq0jets_zz2l2nu            shapeN2           -        -        -        -        -        -        1        -        -        - 
+CMS_hzz2l2v_sys_topwww_8TeV                   lnN               -        -        -        -        -        -        -        - 1.250000        - 
+CMS_hzz2l2v_sys_zll_8TeV                      lnN               -        -        -        -        -        -        -        -        - 1.250000 
+CMS_hzz2l2v_umet                              shapeN2           1        1        1        1        1        1        1        1        -        - 
+CMS_hzz2l2v_wzpt                              shapeN2           -        -        -        -        -        -        -        1        -        - 
+CMS_hzz2l2v_zzpt                              shapeN2           -        -        -        -        -        -        1        -        -        - 
+CMS_res_j                                     shapeN2           1        1        1        1        1        1        1        1        -        - 
+CMS_scale_e                                   shapeN2           1        1        1        1        1        1        1        1        -        - 
+CMS_scale_j                                   shapeN2           1        1        1        1        1        1        1        1        -        - 
+QCDscale_VV                                   lnN               -        -        -        -        -        - 1.066900 1.076700        -        - 
+QCDscale_ggH                                  lnN        1.003683 1.003683 1.003683        -        -        -        -        -        -        - 
+QCDscale_ggH1in                               lnN        1.124893 1.124893 1.124893        -        -        -        -        -        -        - 
+QCDscale_qqH                                  lnN               -        -        - 1.002828 1.002828 1.002828        -        -        -        - 
+UEPS                                          lnN        1.062878 1.062878 1.062878        -        -        -        -        -        -        - 
+XSec_sys_WZ                                   lnN               -        -        -        -        -        -        - 1.056000        -        - 
+lumi_8TeV                                     lnN        1.026000 1.026000 1.026000 1.026000 1.026000 1.026000 1.026000 1.026000        -        - 
+pdf_gg                                        lnN        1.075000 1.075000 1.075000        -        -        -        -        -        -        - 
+pdf_qqbar                                     lnN               -        -        - 1.040000 1.040000 1.040000 1.031200        -        -        - 
+CMS_zz4l_mu param 0.935929  -0.23/+0.26
+CMS_widthH_kbkg param 1.0       -0.10/+0.10

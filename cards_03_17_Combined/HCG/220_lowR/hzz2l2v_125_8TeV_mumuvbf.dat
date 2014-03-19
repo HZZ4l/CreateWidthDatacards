@@ -1,0 +1,53 @@
+imax 1
+jmax *
+kmax *
+-------------------------------
+shapes * * hzz2l2v_125_8TeV.root mumuvbf/$PROCESS mumuvbf/$PROCESS_$SYSTEMATIC
+-------------------------------
+bin 1
+Observation 3.000000
+-------------------------------
+                                                    bin         1        1        1        1        1        1        1        1        1        1 
+                                                process     ggH_b    ggH_s  ggH_sbi    qqH_b    qqH_s  qqH_sbi  zz2l2nu   wz3lnu   topwww      zll 
+                                                process        -5       -4       -3       -2       -1        0        1        2        3        4 
+                                                   rate  0.271323 0.057685 0.244991 0.214526 0.057898 0.158869 0.218130 0.167201 1.830000 1.470179 
+-------------------------------
+CMS_eff_b                                     shapeN2           1        1        1        1        1        1        1        1        -        - 
+CMS_eff_m                                     lnN        1.026000 1.026000 1.026000 1.026000 1.026000 1.026000 1.026000 1.026000        -        - 
+CMS_hzz2l2v_pu                                shapeN2           1        1        1        1        1        1        1        1        -        - 
+CMS_hzz2l2v_stat_mumuvbf_ggH_b_b0_8TeV        shapeN2           1        -        -        -        -        -        -        -        -        - 
+CMS_hzz2l2v_stat_mumuvbf_ggH_b_b1_8TeV        shapeN2           1        -        -        -        -        -        -        -        -        - 
+CMS_hzz2l2v_stat_mumuvbf_ggH_s                shapeN2           -        1        -        -        -        -        -        -        -        - 
+CMS_hzz2l2v_stat_mumuvbf_ggH_s_b0_8TeV        shapeN2           -        1        -        -        -        -        -        -        -        - 
+CMS_hzz2l2v_stat_mumuvbf_ggH_sbi_b0_8TeV      shapeN2           -        -        1        -        -        -        -        -        -        - 
+CMS_hzz2l2v_stat_mumuvbf_ggH_sbi_b1_8TeV      shapeN2           -        -        1        -        -        -        -        -        -        - 
+CMS_hzz2l2v_stat_mumuvbf_qqH_b                shapeN2           -        -        -        1        -        -        -        -        -        - 
+CMS_hzz2l2v_stat_mumuvbf_qqH_s                shapeN2           -        -        -        -        1        -        -        -        -        - 
+CMS_hzz2l2v_stat_mumuvbf_qqH_s_b0_8TeV        shapeN2           -        -        -        -        1        -        -        -        -        - 
+CMS_hzz2l2v_stat_mumuvbf_qqH_sbi              shapeN2           -        -        -        -        -        1        -        -        -        - 
+CMS_hzz2l2v_stat_mumuvbf_topwww_b0_8TeV       shapeN2           -        -        -        -        -        -        -        -        1        - 
+CMS_hzz2l2v_stat_mumuvbf_topwww_b1_8TeV       shapeN2           -        -        -        -        -        -        -        -        1        - 
+CMS_hzz2l2v_stat_mumuvbf_wz3lnu_b0_8TeV       shapeN2           -        -        -        -        -        -        -        1        -        - 
+CMS_hzz2l2v_stat_mumuvbf_wz3lnu_b1_8TeV       shapeN2           -        -        -        -        -        -        -        1        -        - 
+CMS_hzz2l2v_stat_mumuvbf_zll                  shapeN2           -        -        -        -        -        -        -        -        -        1 
+CMS_hzz2l2v_stat_mumuvbf_zll_b0_8TeV          shapeN2           -        -        -        -        -        -        -        -        -        1 
+CMS_hzz2l2v_stat_mumuvbf_zz2l2nu_b0_8TeV      shapeN2           -        -        -        -        -        -        1        -        -        - 
+CMS_hzz2l2v_stat_mumuvbf_zz2l2nu_b1_8TeV      shapeN2           -        -        -        -        -        -        1        -        -        - 
+CMS_hzz2l2v_sys_topwww_8TeV                   lnN               -        -        -        -        -        -        -        - 1.250000        - 
+CMS_hzz2l2v_sys_zll_8TeV                      lnN               -        -        -        -        -        -        -        -        - 1.250000 
+CMS_hzz2l2v_umet                              shapeN2           1        1        1        1        1        1        1        1        -        - 
+CMS_hzz2l2v_wzpt                              shapeN2           -        -        -        -        -        -        -        1        -        - 
+CMS_hzz2l2v_zzpt                              shapeN2           -        -        -        -        -        -        1        -        -        - 
+CMS_res_j                                     shapeN2           1        1        1        1        1        1        1        1        -        - 
+CMS_scale_j                                   shapeN2           1        1        1        1        1        1        1        1        -        - 
+CMS_scale_m                                   shapeN2           1        1        1        1        1        1        1        1        -        - 
+QCDscale_VV                                   lnN               -        -        -        -        -        - 1.066900 1.076700        -        - 
+QCDscale_ggH2in                               lnN        0.430146 0.430146 0.430146        -        -        -        -        -        -        - 
+QCDscale_qqH                                  lnN               -        -        - 1.002828 1.002828 1.002828        -        -        -        - 
+UEPS                                          lnN        0.713777 0.713777 0.713777        -        -        -        -        -        -        - 
+XSec_sys_WZ                                   lnN               -        -        -        -        -        -        - 1.056000        -        - 
+lumi_8TeV                                     lnN        1.026000 1.026000 1.026000 1.026000 1.026000 1.026000 1.026000 1.026000        -        - 
+pdf_gg                                        lnN        1.075000 1.075000 1.075000        -        -        -        -        -        -        - 
+pdf_qqbar                                     lnN               -        -        - 1.040000 1.040000 1.040000 1.031200        -        -        - 
+CMS_zz4l_mu param 0.935929  -0.23/+0.26
+CMS_widthH_kbkg param 1.0       -0.10/+0.10
