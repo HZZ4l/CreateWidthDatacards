@@ -20,7 +20,7 @@ void plotScan1D(int mass = 240, int maxwidth = 30, bool blind = true){
 
   if(!blind)
     {
-      sprintf(boh,"higgsCombine2D_observed.MultiDimFit.mH%d.root", mass);
+      sprintf(boh,"higgsCombine2D_obs.MultiDimFit.mH%d.root", mass);
       TFile *f1=new TFile(boh);
       TTree *t1=(TTree*)f1->Get("limit");
       t1->Draw("2*deltaNLL:CMS_zz4l_GGsm", "deltaNLL > 0","PL");

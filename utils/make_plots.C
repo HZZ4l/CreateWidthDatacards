@@ -1,7 +1,7 @@
 make_plots()
 {
 
-  bool sumChannels = false;
+  bool sumChannels = true;
 
   gROOT->ProcessLine("gSystem->AddIncludePath(\"-I$ROOFITSYS/include/\")");
   gROOT->ProcessLine("gSystem->Load(\"libRooFit\")");
@@ -370,10 +370,6 @@ make_plots()
 
   RooDataSet* data_4e = FOURe_w->data("data_obs")->Clone("data_4e");
   if(sumChannels)data->append(*data_4e);
-  RooPlot* mass_data = FOURe_mass.frame();
-  RooPlot* kd_data = TWOeTWOmu_kd.frame();
-  data_4e->plotOn(mass_data);
-  data_4e->plotOn(kd_data);
 
   ifstream FOURe_card;
   FOURe_card.open("hzz4l_4eS_8TeV.txt");
@@ -546,19 +542,25 @@ make_plots()
     Zjets_2e2mu_kd->Add(Zjets_4mu_kd);
     Zjets_2e2mu_kd->Add(Zjets_4e_kd);
   }
+
+  RooPlot* mass_data = FOURe_mass->frame();
+  RooPlot* kd_data = TWOeTWOmu_kd->frame();
+  data->plotOn(mass_data);
+  data->plotOn(kd_data);
+
   THStack* kd_stack = new THStack("KDStack","KDStack");
-  kd_stack->SetTitle(Form(";D_{gg};Events/%1.4f",Zjets_4e_kd->GetXaxis()->GetBinWidth(2)));
-  kd_stack->Add(Zjets_4e_kd);
-  kd_stack->Add(qqZZ_4e_kd);
-  kd_stack->Add(ggZZ_4e_kd);
-  kd_stack->Add(VBF_4e_kd);
+  kd_stack->SetTitle(Form(";D_{gg};Events/%1.4f",Zjets_2e2mu_kd->GetXaxis()->GetBinWidth(2)));
+  kd_stack->Add(Zjets_2e2mu_kd);
+  kd_stack->Add(qqZZ_2e2mu_kd);
+  kd_stack->Add(ggZZ_2e2mu_kd);
+  kd_stack->Add(VBF_2e2mu_kd);
 
   THStack* kd_stack2 = new THStack("KDStack2","KDStack2");
-  kd_stack2->SetTitle(Form(";D_{gg};Events/%1.4f",Zjets_4e_kd->GetXaxis()->GetBinWidth(2)));
-  kd_stack2->Add(Zjets_4e_kd);
-  kd_stack2->Add(qqZZ_4e_kd);
-  kd_stack2->Add(BSM_4e_kd);
-  kd_stack2->Add(BSM_VBF_4e_kd);
+  kd_stack2->SetTitle(Form(";D_{gg};Events/%1.4f",Zjets_2e2mu_kd->GetXaxis()->GetBinWidth(2)));
+  kd_stack2->Add(Zjets_2e2mu_kd);
+  kd_stack2->Add(qqZZ_2e2mu_kd);
+  kd_stack2->Add(BSM_2e2mu_kd);
+  kd_stack2->Add(BSM_VBF_2e2mu_kd);
 
   TPaveText *pt = new TPaveText(0.0992462,0.90544,0.899497,0.943005,"NDC");
   pt->SetBorderSize(0);
@@ -583,33 +585,33 @@ make_plots()
   leg2->SetFillColor(0);
   leg2->SetBorderSize(0);
 
-  leg2->AddEntry(Zjets_4e_mass,"Z+X","f");
-  leg2->AddEntry(qqZZ_4e_mass,"qqZZ","f");
-  leg2->AddEntry(ggZZ_4e_mass,"ggZZ_{SM} (#Gamma = #Gamma_{SM})","f");
-  leg2->AddEntry(BSM_4e_mass,"ggZZ_{BSM} (#Gamma = 25 #times #Gamma_{SM})","f");
-  leg2->AddEntry(VBF_4e_mass,"VBF_{SM} (#Gamma = #Gamma_{SM})","f");
-  leg2->AddEntry(BSM_VBF_4e_mass,"VBF_{BSM} (#Gamma = 25 #times #Gamma_{SM})","f");
+  leg2->AddEntry(Zjets_2e2mu_mass,"Z+X","f");
+  leg2->AddEntry(qqZZ_2e2mu_mass,"qqZZ","f");
+  leg2->AddEntry(ggZZ_2e2mu_mass,"ggZZ_{SM} (#Gamma = #Gamma_{SM})","f");
+  leg2->AddEntry(BSM_2e2mu_mass,"ggZZ_{BSM} (#Gamma = 25 #times #Gamma_{SM})","f");
+  leg2->AddEntry(VBF_2e2mu_mass,"VBF_{SM} (#Gamma = #Gamma_{SM})","f");
+  leg2->AddEntry(BSM_VBF_2e2mu_mass,"VBF_{BSM} (#Gamma = 25 #times #Gamma_{SM})","f");
   leg2->Draw();
 
-  c1->SaveAs("can_kd_ggsm4e.C");
-  c1->SaveAs("can_kd_ggsm4e.root");
-  c1->SaveAs("can_kd_ggsm4e.eps");
-  c1->SaveAs("can_kd_ggsm4e.png");
-  c1->SaveAs("can_kd_ggsm4e.pdf");
+  c1->SaveAs("can_kd_ggsmKBKG28.C");
+  c1->SaveAs("can_kd_ggsmKBKG28.root");
+  c1->SaveAs("can_kd_ggsmKBKG28.eps");
+  c1->SaveAs("can_kd_ggsmKBKG28.png");
+  c1->SaveAs("can_kd_ggsmKBKG28.pdf");
 
   THStack* mass_stack = new THStack("MassStack","MassStack");
-  mass_stack->SetTitle(Form(";m_{4l};Events/%2.0fGeV",Zjets_4e_mass->GetXaxis()->GetBinWidth(20)));
-  mass_stack->Add(Zjets_4e_mass);
-  mass_stack->Add(qqZZ_4e_mass);
-  mass_stack->Add(ggZZ_4e_mass);
-  mass_stack->Add(VBF_4e_mass);
+  mass_stack->SetTitle(Form(";m_{4l};Events/%2.0fGeV",Zjets_2e2mu_mass->GetXaxis()->GetBinWidth(20)));
+  mass_stack->Add(Zjets_2e2mu_mass);
+  mass_stack->Add(qqZZ_2e2mu_mass);
+  mass_stack->Add(ggZZ_2e2mu_mass);
+  mass_stack->Add(VBF_2e2mu_mass);
 
   THStack* mass_stack2 = new THStack("MassStack2","MassStack2");
-  mass_stack2->SetTitle(Form(";m_{4l};Events/%2.0fGeV",Zjets_4e_mass->GetXaxis()->GetBinWidth(20)));
-  mass_stack2->Add(Zjets_4e_mass);
-  mass_stack2->Add(qqZZ_4e_mass);
-  mass_stack2->Add(BSM_4e_mass);
-  mass_stack2->Add(BSM_VBF_4e_mass);
+  mass_stack2->SetTitle(Form(";m_{4l};Events/%2.0fGeV",Zjets_2e2mu_mass->GetXaxis()->GetBinWidth(20)));
+  mass_stack2->Add(Zjets_2e2mu_mass);
+  mass_stack2->Add(qqZZ_2e2mu_mass);
+  mass_stack2->Add(BSM_2e2mu_mass);
+  mass_stack2->Add(BSM_VBF_2e2mu_mass);
 
   
   mass_stack2->Draw();
@@ -622,30 +624,30 @@ make_plots()
   leg->SetFillColor(0);
   leg->SetBorderSize(0);
 
-  leg->AddEntry(Zjets_4e_mass,"Z+X","f");
-  leg->AddEntry(qqZZ_4e_mass,"qqZZ","f");
-  leg->AddEntry(ggZZ_4e_mass,"ggZZ_{SM} (#Gamma = #Gamma_{SM})","f");
-  leg->AddEntry(BSM_4e_mass,"ggZZ_{BSM} (#Gamma = 25 #times #Gamma_{SM})","f");
-  leg->AddEntry(VBF_4e_mass,"VBF_{SM} (#Gamma = #Gamma_{SM})","f");
-  leg->AddEntry(BSM_VBF_4e_mass,"VBF_{BSM} (#Gamma = 25 #times #Gamma_{SM})","f"); 
+  leg->AddEntry(Zjets_2e2mu_mass,"Z+X","f");
+  leg->AddEntry(qqZZ_2e2mu_mass,"qqZZ","f");
+  leg->AddEntry(ggZZ_2e2mu_mass,"ggZZ_{SM} (#Gamma = #Gamma_{SM})","f");
+  leg->AddEntry(BSM_2e2mu_mass,"ggZZ_{BSM} (#Gamma = 25 #times #Gamma_{SM})","f");
+  leg->AddEntry(VBF_2e2mu_mass,"VBF_{SM} (#Gamma = #Gamma_{SM})","f");
+  leg->AddEntry(BSM_VBF_2e2mu_mass,"VBF_{BSM} (#Gamma = 25 #times #Gamma_{SM})","f"); 
 
   leg->Draw();
 
-  c1->SaveAs("can_mass_ggsm4e.C");
-  c1->SaveAs("can_mass_ggsm4e.root");
-  c1->SaveAs("can_mass_ggsm4e.eps");
-  c1->SaveAs("can_mass_ggsm4e.png");
-  c1->SaveAs("can_mass_ggsm4e.pdf");
+  c1->SaveAs("can_mass_ggsmKBKG28.C");
+  c1->SaveAs("can_mass_ggsmKBKG28.root");
+  c1->SaveAs("can_mass_ggsmKBKG28.eps");
+  c1->SaveAs("can_mass_ggsmKBKG28.png");
+  c1->SaveAs("can_mass_ggsmKBKG28.pdf");
 
-  gPad->SetLogy();
-  gPad->Update();
-  gPad->RedrawAxis();
+//   gPad->SetLogy();
+//   gPad->Update();
+//   gPad->RedrawAxis();
 
-  c1->SaveAs("can_mass_ggsm_log4e.C");
-  c1->SaveAs("can_mass_ggsm_log4e.root");
-  c1->SaveAs("can_mass_ggsm_log4e.eps");
-  c1->SaveAs("can_mass_ggsm_log4e.png");
-  c1->SaveAs("can_mass_ggsm_log4e.pdf");
+//   c1->SaveAs("can_mass_ggsm_log2e2mu.C");
+//   c1->SaveAs("can_mass_ggsm_log2e2mu.root");
+//   c1->SaveAs("can_mass_ggsm_log2e2mu.eps");
+//   c1->SaveAs("can_mass_ggsm_log2e2mu.png");
+//   c1->SaveAs("can_mass_ggsm_log2e2mu.pdf");
 
 
 }
