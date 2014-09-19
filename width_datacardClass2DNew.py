@@ -9,6 +9,7 @@ import ROOT
 from array import array
 from systematicsClass import *
 from inputReader import *
+from HiggsAnalysis.CombinedLimit.SMHiggsBuilder import SMHiggsBuilder
 
 ## ------------------------------------
 ##  card and workspace class
@@ -144,24 +145,62 @@ class width_datacardClass:
         CMS_zz4l_widthMass_FI = ROOT.RooRealVar(CMS_zz4l_widthMass_name,CMS_zz4l_widthMass_name,self.templRange,1600)    
         CMS_zz4l_widthMass_FI.setBins(bins)
 
+        mu_name = "R"
+        mu = ROOT.RooRealVar(mu_name,mu_name,1.0,0,4)
+        mu.setVal(1)
+        mu.setBins(100)
+        mu_name = "kV"
+        muV = ROOT.RooRealVar(mu_name,mu_name,1.0,0,8)
+        muV.setVal(1)
+        muV.setBins(100)
+        mu_name = "kgluon"
+        muF = ROOT.RooRealVar(mu_name,mu_name,1.0,0,4)
+        muF.setVal(1)
+        muF.setBins(100)
+
+
+        #kV=ROOT.RooRealVar("kV","kV",0.0,0.0,1.0) 
+        ktau=ROOT.RooRealVar("ktau","ktau",0.0,0.0,2.0)
+        ktop=ROOT.RooRealVar("ktop","ktop",0.0,0.0,4.0)
+        kbottom=ROOT.RooRealVar("kbottom","kbottom",0,0.0,3.0)
+        #kgluon=ROOT.RooRealVar("kgluon","kgluon",0,0.0,2.0)
+        kgamma=ROOT.RooRealVar("kgamma","kgamma",0,0.0,2.5)
+        #BRInvUndet=ROOT.RooRealVar("BRInvUndet","BRInvUndet",0,0,1)
+
+        #Should we put the explicit SM values? OR can we fix them in the Physics model?
+        SM_BR_hzz=ROOT.RooRealVar("SM_BR_hzz","SM_BR_hzz",1,0.0,2.0) 
+        SM_BR_hww=ROOT.RooRealVar("SM_BR_hww","SM_BR_hww",1,0.0,2.0)
+        SM_BR_htt=ROOT.RooRealVar("SM_BR_htt","SM_BR_htt",1,0.0,2.0)
+        SM_BR_hmm=ROOT.RooRealVar("SM_BR_hmm","SM_BR_hmm",1,0.0,2.0)
+        SM_BR_htoptop=ROOT.RooRealVar("SM_BR_htoptop","SM_BR_htoptop",1,0.0,2.0)
+        SM_BR_hcc=ROOT.RooRealVar("SM_BR_hcc","SM_BR_hcc",1,0.0,2.0)
+        SM_BR_hbb=ROOT.RooRealVar("SM_BR_hbb","SM_BR_hbb",1,0.0,2.0)
+        SM_BR_hss=ROOT.RooRealVar("SM_BR_hss","SM_BR_hss",1,0.0,2.0)
+        SM_BR_hgluglu=ROOT.RooRealVar("SM_BR_hgluglu","SM_BR_hgluglu",1,0.0,2.0)
+        SM_BR_hgg=ROOT.RooRealVar("SM_BR_hgg","SM_BR_hgg",1,0.0,2.0)
+        SM_BR_hzg=ROOT.RooRealVar("SM_BR_hzg","SM_BR_hzg",1,0.0,2.0)
+        #just to scale properly the Ks: 1 if we minimize on GGsm, 0 if we use Ks
+        normScalerK =  ROOT.RooRealVar("CMS_zz4l_scalerK","CMS_zz4l_scalerK",1.0,0.0,2.0)
+        #normScalerK.setVal(1)
+        #normScalerK.setConstant(true)
+        #CMS_zz4l_Gscal_Vectors=ROOT.RooFormulaVar("CMS_zz4l_Gscal_Vectors","@0*@0 * (@1+@2)*abs(1-@3)", ROOT.RooArgList(muV, SM_BR_hzz, SM_BR_hww,normScalerK))
+        CMS_zz4l_Gscal_Vectors=ROOT.RooFormulaVar("CMS_zz4l_Gscal_Vectors","(@0+@1)*abs(1-@2)", ROOT.RooArgList(SM_BR_hzz, SM_BR_hww,normScalerK))
+        CMS_zz4l_Gscal_tau=ROOT.RooFormulaVar("CMS_zz4l_Gscal_tau","@0*@0 * (@1+@2)*abs(1-@3)", ROOT.RooArgList(ktau, SM_BR_htt, SM_BR_hmm,normScalerK))
+        CMS_zz4l_Gscal_top=ROOT.RooFormulaVar("CMS_zz4l_Gscal_top","@0*@0 * (@1+@2)*abs(1-@3)", ROOT.RooArgList(ktop, SM_BR_htoptop, SM_BR_hcc,normScalerK))
+        CMS_zz4l_Gscal_bottom=ROOT.RooFormulaVar("CMS_zz4l_Gscal_bottom","@0*@0 * (@1+@2)*abs(1-@3)", ROOT.RooArgList(kbottom, SM_BR_hbb, SM_BR_hss,normScalerK))
+        CMS_zz4l_Gscal_gluon=ROOT.RooFormulaVar("CMS_zz4l_Gscal_gluon","@0*@0 * @1*abs(1-@2)", ROOT.RooArgList(muF, SM_BR_hgluglu,normScalerK))
+        CMS_zz4l_Gscal_gamma=ROOT.RooFormulaVar("CMS_zz4l_Gscal_gamma","@0*@0 * (@1+@2)*abs(1-@3)", ROOT.RooArgList(kgamma, SM_BR_hgg, SM_BR_hzg,normScalerK))
+
+        listggsm = ROOT.RooArgList(CMS_zz4l_Gscal_Vectors, CMS_zz4l_Gscal_tau, CMS_zz4l_Gscal_top, CMS_zz4l_Gscal_bottom, CMS_zz4l_Gscal_gluon, CMS_zz4l_Gscal_gamma,normScalerK)
+        #listggsm = ROOT.RooArgList(kV,ktau,ktop,kbottom,kgluon,kgamma,BRInvUndet)
+
         x_name = "CMS_zz4l_GGsm"
 
         x = ROOT.RooRealVar(x_name,x_name,0,50)
         x.setVal(1)
         x.setBins(100)
 
-        mu_name = "R"
-        mu = ROOT.RooRealVar(mu_name,mu_name,1.0,0,4)
-        mu.setVal(1)
-        mu.setBins(100)
-        mu_name = "RV"
-        muV = ROOT.RooRealVar(mu_name,mu_name,1.0,0,8)
-        muV.setVal(1)
-        muV.setBins(100)
-        mu_name = "RF"
-        muF = ROOT.RooRealVar(mu_name,mu_name,1.0,0,4)
-        muF.setVal(1)
-        muF.setBins(100)
+        Kframework = ROOT.RooFormulaVar("gammaK","@0+@1+@2+@3+@4+@5+@6",listggsm)
 
         mu_name = "CMS_widthH_kbkg"
 
@@ -316,7 +355,7 @@ class width_datacardClass:
 	bkgRates_QCDUp.setConstant(true)
 	interfRates_QCDUp.setVal(Sig_T_4_Up_QCD.Integral("width"))
 	interfRates_QCDUp.setConstant(true)
-        ggZZQCDUp_norm = ROOT.RooFormulaVar(ggZZVarNormQCDUp_Name,"(@0*@3*@6*@4+@1*sqrt(@3*@6*@4)*sign(@5)*sqrt(abs(@5))+@2*@5)",ROOT.RooArgList(sigRates_QCDUp,interfRates_QCDUp,bkgRates_QCDUp,x,mu,kbkg,muF))
+        ggZZQCDUp_norm = ROOT.RooFormulaVar(ggZZVarNormQCDUp_Name,"(@0*@3*@7*@6*@4+@1*sqrt(@3*@7*@6*@4)*sign(@5)*sqrt(abs(@5))+@2*@5)",ROOT.RooArgList(sigRates_QCDUp,interfRates_QCDUp,bkgRates_QCDUp,x,mu,kbkg,muF,Kframework))
 	ggZZVarNormQCDDown_Name = "ggZZVarQCDDownNorm_{0:.0f}_{1:.0f}".format(self.channel,self.sqrts)
         sigRateQCDDownName = "signal_ggZZQCDDownrate_{0:.0f}_{1:.0f}".format(self.channel,self.sqrts)
         bkgRateQCDDownName = "bkg_ggZZQCDDownrate_{0:.0f}_{1:.0f}".format(self.channel,self.sqrts)
@@ -330,7 +369,7 @@ class width_datacardClass:
 	bkgRates_QCDDown.setConstant(true)
 	interfRates_QCDDown.setVal(Sig_T_4_Down_QCD.Integral("width"))
 	interfRates_QCDDown.setConstant(true)
-        ggZZQCDDown_norm = ROOT.RooFormulaVar(ggZZVarNormQCDDown_Name,"(@0*@3*@6*@4+@1*sqrt(@3*@6*@4)*sign(@5)*sqrt(abs(@5))+@2*@5)",ROOT.RooArgList(sigRates_QCDDown,interfRates_QCDDown,bkgRates_QCDDown,x,mu,kbkg,muF))
+        ggZZQCDDown_norm = ROOT.RooFormulaVar(ggZZVarNormQCDDown_Name,"(@0*@3*@7*@6*@4+@1*sqrt(@3*@7*@6*@4)*sign(@5)*sqrt(abs(@5))+@2*@5)",ROOT.RooArgList(sigRates_QCDDown,interfRates_QCDDown,bkgRates_QCDDown,x,mu,kbkg,muF,Kframework))
 
 	ggZZVarNormPDFUp_Name = "ggZZVarPDFUpNorm_{0:.0f}_{1:.0f}".format(self.channel,self.sqrts)
         sigRatePDFUpName = "signal_ggZZPDFUprate_{0:.0f}_{1:.0f}".format(self.channel,self.sqrts)
@@ -345,7 +384,7 @@ class width_datacardClass:
 	bkgRates_PDFUp.setConstant(true)
 	interfRates_PDFUp.setVal(Sig_T_4_Up_PDF.Integral("width"))
 	interfRates_PDFUp.setConstant(true)
-        ggZZPDFUp_norm = ROOT.RooFormulaVar(ggZZVarNormPDFUp_Name,"(@0*@3*@6*@4+@1*sqrt(@3*@6*@4)*sign(@5)*sqrt(abs(@5))+@2*@5)",ROOT.RooArgList(sigRates_PDFUp,interfRates_PDFUp,bkgRates_PDFUp,x,mu,kbkg,muF))
+        ggZZPDFUp_norm = ROOT.RooFormulaVar(ggZZVarNormPDFUp_Name,"(@0*@3*@7*@6*@4+@1*sqrt(@3*@7*@6*@4)*sign(@5)*sqrt(abs(@5))+@2*@5)",ROOT.RooArgList(sigRates_PDFUp,interfRates_PDFUp,bkgRates_PDFUp,x,mu,kbkg,muF,Kframework))
 	ggZZVarNormPDFDown_Name = "ggZZVarPDFDownNorm_{0:.0f}_{1:.0f}".format(self.channel,self.sqrts)
         sigRatePDFDownName = "signal_ggZZPDFDownrate_{0:.0f}_{1:.0f}".format(self.channel,self.sqrts)
         bkgRatePDFDownName = "bkg_ggZZPDFDownrate_{0:.0f}_{1:.0f}".format(self.channel,self.sqrts)
@@ -359,7 +398,7 @@ class width_datacardClass:
 	bkgRates_PDFDown.setConstant(true)
 	interfRates_PDFDown.setVal(Sig_T_4_Down_PDF.Integral("width"))
 	interfRates_PDFDown.setConstant(true)
-        ggZZPDFDown_norm = ROOT.RooFormulaVar(ggZZVarNormPDFDown_Name,"(@0*@3*@6*@4+@1*sqrt(@3*@6*@4)*sign(@5)*sqrt(abs(@5))+@2*@5)",ROOT.RooArgList(sigRates_PDFDown,interfRates_PDFDown,bkgRates_PDFDown,x,mu,kbkg,muF))
+        ggZZPDFDown_norm = ROOT.RooFormulaVar(ggZZVarNormPDFDown_Name,"(@0*@3*@7*@6*@4+@1*sqrt(@3*@7*@6*@4)*sign(@5)*sqrt(abs(@5))+@2*@5)",ROOT.RooArgList(sigRates_PDFDown,interfRates_PDFDown,bkgRates_PDFDown,x,mu,kbkg,muF,Kframework))
 
 	ggZZVarNorm_Name = "ggZZVarNominalNorm_{0:.0f}_{1:.0f}".format(self.channel,self.sqrts)
         sigRateNominalName = "signal_ggZZNominalrate_{0:.0f}_{1:.0f}".format(self.channel,self.sqrts)
@@ -374,7 +413,7 @@ class width_datacardClass:
 	bkgRates_Nominal.setConstant(true)
 	interfRates_Nominal.setVal(Sig_T_4.Integral("width"))
 	interfRates_Nominal.setConstant(true)
-        ggZZNominal_norm = ROOT.RooFormulaVar(ggZZVarNorm_Name,"(@0*@3*@6*@4+@1*sqrt(@3*@6*@4)*sign(@5)*sqrt(abs(@5))+@2*@5)",ROOT.RooArgList(sigRates_Nominal,interfRates_Nominal,bkgRates_Nominal,x,mu,kbkg,muF))
+        ggZZNominal_norm = ROOT.RooFormulaVar(ggZZVarNorm_Name,"(@0*@3*@7*@6*@4+@1*sqrt(@3*@7*@6*@4)*sign(@5)*sqrt(abs(@5))+@2*@5)",ROOT.RooArgList(sigRates_Nominal,interfRates_Nominal,bkgRates_Nominal,x,mu,kbkg,muF,Kframework))
 	
 
         #Assume BKG and INTERF are from templates
@@ -399,7 +438,7 @@ class width_datacardClass:
 	VBFbkgRates_Up.setConstant(true)
 	VBFinterfRates_Up.setVal(VBF_T_4_Up.Integral("width"))
 	VBFinterfRates_Up.setConstant(true)
-        VBFUp_norm = ROOT.RooFormulaVar(VBFVarNormUp_Name,"(@0*@3*@5*@4+@1*sqrt(@3*@5*@4)+@2)",ROOT.RooArgList(VBFsigRates_Up,VBFinterfRates_Up,VBFbkgRates_Up,x,mu,muV))
+        VBFUp_norm = ROOT.RooFormulaVar(VBFVarNormUp_Name,"(@0*@3*@6*@5*@4+@1*sqrt(@3*@6*@5*@4)+@2)",ROOT.RooArgList(VBFsigRates_Up,VBFinterfRates_Up,VBFbkgRates_Up,x,mu,muV,Kframework))
 	VBFVarNormDown_Name = "VBFVarDownNorm_{0:.0f}_{1:.0f}".format(self.channel,self.sqrts)
         VBFsigRateDownName = "signal_VBFDownrate_{0:.0f}_{1:.0f}".format(self.channel,self.sqrts)
         VBFbkgRateDownName = "bkg_VBFDownrate_{0:.0f}_{1:.0f}".format(self.channel,self.sqrts)
@@ -413,7 +452,7 @@ class width_datacardClass:
 	VBFbkgRates_Down.setConstant(true)
 	VBFinterfRates_Down.setVal(VBF_T_4_Down.Integral("width"))
 	VBFinterfRates_Down.setConstant(true)
-        VBFDown_norm = ROOT.RooFormulaVar(VBFVarNormDown_Name,"(@0*@3*@5*@4+@1*sqrt(@3*@5*@4)+@2)",ROOT.RooArgList(VBFsigRates_Down,VBFinterfRates_Down,VBFbkgRates_Down,x,mu,muV))
+        VBFDown_norm = ROOT.RooFormulaVar(VBFVarNormDown_Name,"(@0*@3*@6*@5*@4+@1*sqrt(@3*@6*@5*@4)+@2)",ROOT.RooArgList(VBFsigRates_Down,VBFinterfRates_Down,VBFbkgRates_Down,x,mu,muV,Kframework))
 
 	VBFVarNormNominal_Name = "VBFVarNominalNorm_{0:.0f}_{1:.0f}".format(self.channel,self.sqrts)
         VBFsigRateNominalName = "signal_VBFNominalrate_{0:.0f}_{1:.0f}".format(self.channel,self.sqrts)
@@ -428,7 +467,7 @@ class width_datacardClass:
 	VBFbkgRates_Nominal.setConstant(true)
 	VBFinterfRates_Nominal.setVal(VBF_T_4.Integral("width"))
 	VBFinterfRates_Nominal.setConstant(true)
-        VBFNominal_norm = ROOT.RooFormulaVar(VBFVarNormNominal_Name,"(@0*@3*@5*@4+@1*sqrt(@3*@5*@4)+@2)",ROOT.RooArgList(VBFsigRates_Nominal,VBFinterfRates_Nominal,VBFbkgRates_Nominal,x,mu,muV))
+        VBFNominal_norm = ROOT.RooFormulaVar(VBFVarNormNominal_Name,"(@0*@3*@6*@5*@4+@1*sqrt(@3*@6*@5*@4)+@2)",ROOT.RooArgList(VBFsigRates_Nominal,VBFinterfRates_Nominal,VBFbkgRates_Nominal,x,mu,muV,Kframework))
 
 
 
@@ -596,11 +635,11 @@ class width_datacardClass:
         interfRates = ROOT.RooRealVar(interfRateName,interfRateName,0.0,10000.0)
         
         sigRateNameNorm = "signalNorm_ggZZrate_{0:.0f}_{1:.0f}".format(self.channel,self.sqrts)
-        sigRatesNorm = ROOT.RooFormulaVar(sigRateNameNorm,"@0*@1*@3/(@0*@1*@3-sqrt(@0*@1*@3)*sign(@2)*sqrt(abs(@2))+@2)",ROOT.RooArgList(x,mu,kbkg,muF)) 
+        sigRatesNorm = ROOT.RooFormulaVar(sigRateNameNorm,"@0*@4*@1*@3/(@0*@4*@1*@3-sqrt(@0*@4*@1*@3)*sign(@2)*sqrt(abs(@2))+@2)",ROOT.RooArgList(x,mu,kbkg,muF,Kframework)) 
         interfRateNameNorm = "interfNorm_ggZZrate_{0:.0f}_{1:.0f}".format(self.channel,self.sqrts)
-        interfRatesNorm = ROOT.RooFormulaVar(interfRateNameNorm,"-sqrt(@0*@1*@3)*sign(@2)*sqrt(abs(@2))/(@0*@1*@3-sqrt(@0*@1*@3)*sign(@2)*sqrt(abs(@2))+@2)",ROOT.RooArgList(x,mu,kbkg,muF))
+        interfRatesNorm = ROOT.RooFormulaVar(interfRateNameNorm,"-sqrt(@0*@4*@1*@3)*sign(@2)*sqrt(abs(@2))/(@0*@4*@1*@3-sqrt(@0*@4*@1*@3)*sign(@2)*sqrt(abs(@2))+@2)",ROOT.RooArgList(x,mu,kbkg,muF,Kframework))
         bkgRateNameNorm = "bkgNorm_ggZZrate_{0:.0f}_{1:.0f}".format(self.channel,self.sqrts)
-        bkgRatesNorm = ROOT.RooFormulaVar(bkgRateNameNorm,"@2/(@0*@1*@3-sqrt(@0*@1*@3)*sign(@2)*sqrt(abs(@2))+@2)",ROOT.RooArgList(x,mu,kbkg,muF))
+        bkgRatesNorm = ROOT.RooFormulaVar(bkgRateNameNorm,"@2/(@0*@4*@1*@3-sqrt(@0*@4*@1*@3)*sign(@2)*sqrt(abs(@2))+@2)",ROOT.RooArgList(x,mu,kbkg,muF,Kframework))
 
         #ggZZpdfName = "ggZZ_RooWidth_{0:.0f}_{1:.0f}".format(self.channel,self.sqrts)
         #ggZZpdf = ROOT.HZZ4lWidth(ggZZpdfName,ggZZpdfName,CMS_zz4l_widthMass,one,x,bkgRates,sigRates,interfRates,Sig_T_1,Sig_T_2,Sig_T_4)
@@ -892,11 +931,11 @@ class width_datacardClass:
 
         ##Assume BKG & INTERF are from templates
         sigRateNameNorm = "signalNorm_VBFrate_{0:.0f}_{1:.0f}".format(self.channel,self.sqrts)
-        VBFsigRatesNorm = ROOT.RooFormulaVar(sigRateNameNorm,"@0*@1*@2/(@0*@1*@2-sqrt(@0*@1*@2)+1)",ROOT.RooArgList(x,mu,muV))
+        VBFsigRatesNorm = ROOT.RooFormulaVar(sigRateNameNorm,"@0*@3*@1*@2/(@0*@3*@1*@2-sqrt(@0*@3*@1*@2)+1)",ROOT.RooArgList(x,mu,muV,Kframework))
         interfRateNameNorm = "interfNorm_VBFrate_{0:.0f}_{1:.0f}".format(self.channel,self.sqrts)
-        VBFinterfRatesNorm = ROOT.RooFormulaVar(interfRateNameNorm,"-sqrt(@0*@1*@2)/(@0*@1*@2-sqrt(@0*@1*@2)+1)",ROOT.RooArgList(x,mu,muV))
+        VBFinterfRatesNorm = ROOT.RooFormulaVar(interfRateNameNorm,"-sqrt(@0*@3*@1*@2)/(@0*@3*@1*@2-sqrt(@0*@3*@1*@2)+1)",ROOT.RooArgList(x,mu,muV,Kframework))
         bkgRateNameNorm = "bkgNorm_VBFrate_{0:.0f}_{1:.0f}".format(self.channel,self.sqrts)
-        VBFbkgRatesNorm = ROOT.RooFormulaVar(bkgRateNameNorm,"1/(@0*@1*@2-sqrt(@0*@1*@2)+1)",ROOT.RooArgList(x,mu,muV))
+        VBFbkgRatesNorm = ROOT.RooFormulaVar(bkgRateNameNorm,"1/(@0*@3*@1*@2-sqrt(@0*@3*@1*@2)+1)",ROOT.RooArgList(x,mu,muV,Kframework))
 
         TemplateName = "VBFsignal_TempDataHist_{0:.0f}_{1:.0f}".format(self.channel,self.sqrts)
         PdfName = "VBFsignal_TemplatePdf_{0:.0f}_{1:.0f}".format(self.channel,self.sqrts)
@@ -1620,12 +1659,14 @@ class width_datacardClass:
         
         ggZZpdfNormName = "ggZZ_RooWidth_{0:.0f}_{1:.0f}_norm".format(self.channel,self.sqrts)
         #ggZZpdf_norm = ROOT.RooFormulaVar(ggZZpdfNormName,"@0*@3*@4-@1*sqrt(@3*@4)*sign(@5)*sqrt(abs(@5))+@2*@5",ROOT.RooArgList(sigRates,interfRates,bkgRates,x,mu,kbkg))
-        ggZZpdf_norm = ROOT.RooFormulaVar(ggZZpdfNormName,"(@0*@3*@7*@4-@1*sqrt(@3*@7*@4)*sign(@5)*sqrt(abs(@5))+@2*@5)*@6*@8",ROOT.RooArgList(sigRates,interfRates,bkgRates,x,mu,kbkg,thetaSyst_ggZZ,muF,thetaSyst_ggZZ_pdf))
+        ggzzpdf_normarglist = ROOT.RooArgList(sigRates,interfRates,bkgRates,x,mu,kbkg,thetaSyst_ggZZ,muF,thetaSyst_ggZZ_pdf)
+        ggzzpdf_normarglist.add(Kframework)
+        ggZZpdf_norm = ROOT.RooFormulaVar(ggZZpdfNormName,"(@0*@3*@9*@7*@4-@1*sqrt(@3*@9*@7*@4)*sign(@5)*sqrt(abs(@5))+@2*@5)*@6*@8",ggzzpdf_normarglist)
         ggZZpdf_norm.SetNameTitle("ggzz_norm","ggzz_norm")
         getattr(w,'import')(ggZZpdf_norm, ROOT.RooFit.RecycleConflictNodes())
 
         VBFpdfNormName = "VBF_RooWidth_{0:.0f}_{1:.0f}_norm".format(self.channel,self.sqrts)
-        VBFpdf_norm = ROOT.RooFormulaVar(VBFpdfNormName,"(@0*@3*@6*@4-@1*sqrt(@3*@6*@4)+@2)*@5",ROOT.RooArgList(VBFsigRates,VBFinterfRates,VBFbkgRates,x,mu,thetaSyst_VBF,muV))
+        VBFpdf_norm = ROOT.RooFormulaVar(VBFpdfNormName,"(@0*@3*@7*@6*@4-@1*sqrt(@3*@7*@6*@4)+@2)*@5",ROOT.RooArgList(VBFsigRates,VBFinterfRates,VBFbkgRates,x,mu,thetaSyst_VBF,muV,Kframework))
         VBFpdf_norm.SetNameTitle("vbf_offshell_norm","vbf_offshell_norm")
         getattr(w,'import')(VBFpdf_norm, ROOT.RooFit.RecycleConflictNodes())
 
