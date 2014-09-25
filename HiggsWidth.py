@@ -91,12 +91,12 @@ class Higgswidth(PhysicsModel):
             self.modelBuilder.doVar("kgamma[0.0,0.0,2.5]")
             #self.modelBuilder.doVar("BRInvUndet[0,0,1]")
             self.modelBuilder.doVar("CMS_zz4l_scalerK[1.0,0.0,1.0]")
-            self.modelBuilder.factory_('expr::CMS_zz4l_Gscal_Vectors("@0*@0 * (@1+@2)*abs(1-@3)", kV, SM_BR_hzz, SM_BR_hww, CMS_zz4l_scalerK,oneforK)')
-            self.modelBuilder.factory_('expr::CMS_zz4l_Gscal_tau("@0*@0 * (@1+@2)*abs(1-@3)", ktau, SM_BR_htt, SM_BR_hmm, CMS_zz4l_scalerK,oneforK)')
-            self.modelBuilder.factory_('expr::CMS_zz4l_Gscal_top("@0*@0 * (@1+@2)*abs(1-@3)", ktop, SM_BR_htoptop, SM_BR_hcc, CMS_zz4l_scalerK,oneforK)')
-            self.modelBuilder.factory_('expr::CMS_zz4l_Gscal_bottom("@0*@0 * (@1+@2)*abs(1-@3)", kbottom, SM_BR_hbb, SM_BR_hss, CMS_zz4l_scalerK,oneforK)')
-            self.modelBuilder.factory_('expr::CMS_zz4l_Gscal_gluon("@0*@0 * @1*abs(1-@2)", kgluon, SM_BR_hgluglu, CMS_zz4l_scalerK,oneforK)')
-            self.modelBuilder.factory_('expr::CMS_zz4l_Gscal_gamma("@0*@0 * (@1+@2)*abs(1-@3)", kgamma, SM_BR_hgg, SM_BR_hzg, CMS_zz4l_scalerK,oneforK)')           
+            self.modelBuilder.factory_('expr::CMS_zz4l_Gscal_Vectors("@0*@0 * (@1+@2)*abs(1-@3)", kV, SM_BR_hzz, SM_BR_hww, CMS_zz4l_scalerK)')
+            self.modelBuilder.factory_('expr::CMS_zz4l_Gscal_tau("@0*@0 * (@1+@2)*abs(1-@3)", ktau, SM_BR_htt, SM_BR_hmm, CMS_zz4l_scalerK)')
+            self.modelBuilder.factory_('expr::CMS_zz4l_Gscal_top("@0*@0 * (@1+@2)*abs(1-@3)", ktop, SM_BR_htoptop, SM_BR_hcc, CMS_zz4l_scalerK)')
+            self.modelBuilder.factory_('expr::CMS_zz4l_Gscal_bottom("@0*@0 * (@1+@2)*abs(1-@3)", kbottom, SM_BR_hbb, SM_BR_hss, CMS_zz4l_scalerK)')
+            self.modelBuilder.factory_('expr::CMS_zz4l_Gscal_gluon("@0*@0 * @1*abs(1-@2)", kgluon, SM_BR_hgluglu, CMS_zz4l_scalerK)')
+            self.modelBuilder.factory_('expr::CMS_zz4l_Gscal_gamma("@0*@0 * (@1+@2)*abs(1-@3)", kgamma, SM_BR_hgg, SM_BR_hzg, CMS_zz4l_scalerK)')           
             self.modelBuilder.factory_('sum::gammaK(CMS_zz4l_Gscal_Vectors, CMS_zz4l_Gscal_tau, CMS_zz4l_Gscal_top, CMS_zz4l_Gscal_bottom, CMS_zz4l_Gscal_gluon, CMS_zz4l_Gscal_gamma, CMS_zz4l_scalerK)')
 
         if self.useKframework:
