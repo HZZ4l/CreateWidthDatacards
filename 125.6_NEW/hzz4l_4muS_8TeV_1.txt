@@ -34,4 +34,3 @@ CMS_zz4l_mean_m_sig param 0.0 1.0
 ## CMS_zz4l_mean_m_sig = 0.001 
 CMS_zz4l_sigma_m_sig param 0.0 0.2 
 CMS_zz4l_n_sig_1_8 param 0.0 0.01 
-interf_ggH param 0 1 [-1,1] 

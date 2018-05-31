@@ -1,14 +1,10 @@
 #! /usr/bin/env python
 import sys
-import os
-import re
-import math
-from scipy.special import erf
-from ROOT import *
+import os, math
 import ROOT
 from array import array
-from systematicsClass import *
-from inputReader import *
+from systematicsClass import systematicsClass
+from inputReader import inputReader
 
 # ------------------------------------
 # card and workspace class
@@ -84,7 +80,7 @@ class width_datacardClass:
         # ---------------- VARIABLES FOR LATER --------------- ##
         self.bUseCBnoConvolution = False
 
-        myCSW = HiggsCSandWidth()
+        myCSW = ROOT.HiggsCSandWidth()
 
         w = ROOT.RooWorkspace("w", "w")
 
@@ -121,6 +117,7 @@ class width_datacardClass:
         systematics_forXSxBR = systematicsClass(self.mH, True, self.isFSR, theInputs)
         systematics.useDjet = useDjet
         systematics_forXSxBR.useDjet = useDjet
+        qqZZ_PDF_error = systematics.qqVV_pdfSys
 
         # -------------------------- SIGNAL SHAPE ----------------------------------- ##
 
@@ -169,6 +166,12 @@ class width_datacardClass:
         kbkg.setVal(1.0)
         kbkg.setBins(100)
 
+#        VBFkbkg = ROOT.RooRealVar("CMS_widthH_vbf_kbkg", "CMS_widthH_vbf_kbkg", 1.0, 0, 2)
+#        VBFkbkg.setBins(100)
+        VBFkbkg = ROOT.RooRealVar("CMS_widthH_vbf_kbkg", "CMS_widthH_vbf_kbkg", 1.0)
+        VBFkbkg.setConstant(True) #NOTE THESE KILL THE SYSTEMATIC
+
+
         D2name = "CMS_zz4l_widthKD"
         CMS_zz4l_widthKD = ROOT.RooRealVar(D2name, D2name, 0, 1)
         CMS_zz4l_widthKD.setBins(30)
@@ -205,11 +208,11 @@ class width_datacardClass:
 
         morphVarListggZZ_djet.add(CMS_zz4l_ggzz_djet_syst)
         ggzz_djetsyst_norm_nominal_name = "ggzz_djetsyst_norm_nominal_{0:.0f}_{1:.0f}_{2:.0f}".format(self.channel, self.sqrts, useDjet)
-        ggzz_djetsyst_norm_nominal = RooRealVar(ggzz_djetsyst_norm_nominal_name, ggzz_djetsyst_norm_nominal_name, 1)
+        ggzz_djetsyst_norm_nominal = ROOT.RooRealVar(ggzz_djetsyst_norm_nominal_name, ggzz_djetsyst_norm_nominal_name, 1)
         ggzz_djetsyst_norm_up_name = "ggzz_djetsyst_norm_up_{0:.0f}_{1:.0f}_{2:.0f}".format(self.channel, self.sqrts, useDjet)
-        ggzz_djetsyst_norm_up = RooRealVar(ggzz_djetsyst_norm_up_name, ggzz_djetsyst_norm_up_name, 1.+theInputs['djetscale_ggzz'])
+        ggzz_djetsyst_norm_up = ROOT.RooRealVar(ggzz_djetsyst_norm_up_name, ggzz_djetsyst_norm_up_name, 1.+theInputs['djetscale_ggzz'])
         ggzz_djetsyst_norm_dn_name = "ggzz_djetsyst_norm_dn_{0:.0f}_{1:.0f}_{2:.0f}".format(self.channel, self.sqrts, useDjet)
-        ggzz_djetsyst_norm_dn = RooRealVar(ggzz_djetsyst_norm_dn_name, ggzz_djetsyst_norm_dn_name, 1.-theInputs['djetscale_ggzz'])
+        ggzz_djetsyst_norm_dn = ROOT.RooRealVar(ggzz_djetsyst_norm_dn_name, ggzz_djetsyst_norm_dn_name, 1.-theInputs['djetscale_ggzz'])
         MorphNormList_ggZZ_Djet.add(ggzz_djetsyst_norm_nominal)
         MorphNormList_ggZZ_Djet.add(ggzz_djetsyst_norm_up)
         MorphNormList_ggZZ_Djet.add(ggzz_djetsyst_norm_dn)
@@ -218,11 +221,11 @@ class width_datacardClass:
 
         morphVarListVBF_djet.add(CMS_zz4l_vbf_djet_syst)
         VBF_djetsyst_norm_nominal_name = "VBF_djetsyst_norm_nominal_{0:.0f}_{1:.0f}_{2:.0f}".format(self.channel, self.sqrts, useDjet)
-        VBF_djetsyst_norm_nominal = RooRealVar(VBF_djetsyst_norm_nominal_name, VBF_djetsyst_norm_nominal_name, 1)
+        VBF_djetsyst_norm_nominal = ROOT.RooRealVar(VBF_djetsyst_norm_nominal_name, VBF_djetsyst_norm_nominal_name, 1)
         VBF_djetsyst_norm_up_name = "VBF_djetsyst_norm_up_{0:.0f}_{1:.0f}_{2:.0f}".format(self.channel, self.sqrts, useDjet)
-        VBF_djetsyst_norm_up = RooRealVar(VBF_djetsyst_norm_up_name, VBF_djetsyst_norm_up_name, 1.+theInputs['djetscale_vbf_offshell'])
+        VBF_djetsyst_norm_up = ROOT.RooRealVar(VBF_djetsyst_norm_up_name, VBF_djetsyst_norm_up_name, 1.+theInputs['djetscale_vbf_offshell'])
         VBF_djetsyst_norm_dn_name = "VBF_djetsyst_norm_dn_{0:.0f}_{1:.0f}_{2:.0f}".format(self.channel, self.sqrts, useDjet)
-        VBF_djetsyst_norm_dn = RooRealVar(VBF_djetsyst_norm_dn_name, VBF_djetsyst_norm_dn_name, 1.-theInputs['djetscale_vbf_offshell'])
+        VBF_djetsyst_norm_dn = ROOT.RooRealVar(VBF_djetsyst_norm_dn_name, VBF_djetsyst_norm_dn_name, 1.-theInputs['djetscale_vbf_offshell'])
         MorphNormList_VBF_Djet.add(VBF_djetsyst_norm_nominal)
         MorphNormList_VBF_Djet.add(VBF_djetsyst_norm_up)
         MorphNormList_VBF_Djet.add(VBF_djetsyst_norm_dn)
@@ -231,11 +234,11 @@ class width_datacardClass:
 
         morphVarListqqZZ_djet.add(CMS_zz4l_qqzz_djet_syst)
         qqZZ_djetsyst_norm_nominal_name = "qqZZ_djetsyst_norm_nominal_{0:.0f}_{1:.0f}_{2:.0f}".format(self.channel, self.sqrts, useDjet)
-        qqZZ_djetsyst_norm_nominal = RooRealVar(qqZZ_djetsyst_norm_nominal_name, qqZZ_djetsyst_norm_nominal_name, 1)
+        qqZZ_djetsyst_norm_nominal = ROOT.RooRealVar(qqZZ_djetsyst_norm_nominal_name, qqZZ_djetsyst_norm_nominal_name, 1)
         qqZZ_djetsyst_norm_up_name = "qqZZ_djetsyst_norm_up_{0:.0f}_{1:.0f}_{2:.0f}".format(self.channel, self.sqrts, useDjet)
-        qqZZ_djetsyst_norm_up = RooRealVar(qqZZ_djetsyst_norm_up_name, qqZZ_djetsyst_norm_up_name, 1.+theInputs['djetscale_bkg_qqzz'])
+        qqZZ_djetsyst_norm_up = ROOT.RooRealVar(qqZZ_djetsyst_norm_up_name, qqZZ_djetsyst_norm_up_name, 1.+theInputs['djetscale_bkg_qqzz'])
         qqZZ_djetsyst_norm_dn_name = "qqZZ_djetsyst_norm_dn_{0:.0f}_{1:.0f}_{2:.0f}".format(self.channel, self.sqrts, useDjet)
-        qqZZ_djetsyst_norm_dn = RooRealVar(qqZZ_djetsyst_norm_dn_name, qqZZ_djetsyst_norm_dn_name, 1.-theInputs['djetscale_bkg_qqzz'])
+        qqZZ_djetsyst_norm_dn = ROOT.RooRealVar(qqZZ_djetsyst_norm_dn_name, qqZZ_djetsyst_norm_dn_name, 1.-theInputs['djetscale_bkg_qqzz'])
         MorphNormList_qqZZ_Djet.add(qqZZ_djetsyst_norm_nominal)
         MorphNormList_qqZZ_Djet.add(qqZZ_djetsyst_norm_up)
         MorphNormList_qqZZ_Djet.add(qqZZ_djetsyst_norm_dn)
@@ -251,11 +254,11 @@ class width_datacardClass:
 
         morphVarListzjets_djet.add(CMS_zz4l_zjets_djet_syst)
         zjets_djetsyst_norm_nominal_name = "zjets_djetsyst_norm_nominal_{0:.0f}_{1:.0f}_{2:.0f}".format(self.channel, self.sqrts, useDjet)
-        zjets_djetsyst_norm_nominal = RooRealVar(zjets_djetsyst_norm_nominal_name, zjets_djetsyst_norm_nominal_name, 1)
+        zjets_djetsyst_norm_nominal = ROOT.RooRealVar(zjets_djetsyst_norm_nominal_name, zjets_djetsyst_norm_nominal_name, 1)
         zjets_djetsyst_norm_up_name = "zjets_djetsyst_norm_up_{0:.0f}_{1:.0f}_{2:.0f}".format(self.channel, self.sqrts, useDjet)
-        zjets_djetsyst_norm_up = RooRealVar(zjets_djetsyst_norm_up_name, zjets_djetsyst_norm_up_name, 1.+theInputs['djetscale_bkg_zjets'])
+        zjets_djetsyst_norm_up = ROOT.RooRealVar(zjets_djetsyst_norm_up_name, zjets_djetsyst_norm_up_name, 1.+theInputs['djetscale_bkg_zjets'])
         zjets_djetsyst_norm_dn_name = "zjets_djetsyst_norm_dn_{0:.0f}_{1:.0f}_{2:.0f}".format(self.channel, self.sqrts, useDjet)
-        zjets_djetsyst_norm_dn = RooRealVar(zjets_djetsyst_norm_dn_name, zjets_djetsyst_norm_dn_name, 1.-theInputs['djetscale_bkg_zjets'])
+        zjets_djetsyst_norm_dn = ROOT.RooRealVar(zjets_djetsyst_norm_dn_name, zjets_djetsyst_norm_dn_name, 1.-theInputs['djetscale_bkg_zjets'])
         MorphNormList_zjets_Djet.add(zjets_djetsyst_norm_nominal)
         MorphNormList_zjets_Djet.add(zjets_djetsyst_norm_up)
         MorphNormList_zjets_Djet.add(zjets_djetsyst_norm_dn)
@@ -674,7 +677,7 @@ class width_datacardClass:
         rate_interf_ggzz_Shape = integral_Sig_T_4 * self.lumi  # *2.3
 
 #----------- OWN-CATEGORY DJET ----------#
-        
+
         sigRateQCDUpName = "signal_ggZZQCDUprate_{0:.0f}_{1:.0f}_{2:.0f}".format(self.channel, self.sqrts, useDjet)
         bkgRateQCDUpName = "bkg_ggZZQCDUprate_{0:.0f}_{1:.0f}_{2:.0f}".format(self.channel, self.sqrts, useDjet)
         interfRateQCDUpName = "interf_ggZZQCDUprate_{0:.0f}_{1:.0f}_{2:.0f}".format(self.channel, self.sqrts, useDjet)
@@ -788,7 +791,7 @@ class width_datacardClass:
 
 
 #------------ OPPOSITE DJET CATEGORY --------------#
-        
+
 
         sigRateQCDUpName_OppositeDjet = "signal_ggZZQCDUp_OppositeDjet_rate_{0:.0f}_{1:.0f}_{2:.0f}".format(self.channel, self.sqrts, useDjet)
         bkgRateQCDUpName_OppositeDjet = "bkg_ggZZQCDUp_OppositeDjet_rate_{0:.0f}_{1:.0f}_{2:.0f}".format(self.channel, self.sqrts, useDjet)
@@ -901,7 +904,7 @@ class width_datacardClass:
         sigRates_Nominal_mZZ2_2_OppositeDjet = ROOT.RooRealVar(sigRateNominal_mZZ2_2_Name_OppositeDjet, sigRateNominal_mZZ2_2_Name_OppositeDjet, integral_Sig_T_mZZ2_2_2_OppositeDjet)
         sigRates_Nominal_mZZ2_2_OppositeDjet.setConstant(True)
 
-#---------------------------------------------------#        
+#---------------------------------------------------#
 
 
 # ggH anomalous coupling rate parameterizations
@@ -970,7 +973,7 @@ class width_datacardClass:
             "( sqrt(1-abs(@2))*@0 + sign(@2)*sqrt(abs(@2))*@1 )",
             ROOT.RooArgList(interfRates_PDFDown, interfRates_PDFDown_mZZ2_1, fai1)
             )
-        
+
 
 
         sigRates_Nominal_AnomCoupl_Name_OppositeDjet = "signal_ggZZNominalrate_AnomCoupl_OppositeDjet_{0:.0f}_{1:.0f}_{2:.0f}".format(self.channel, self.sqrts, useDjet)
@@ -1297,7 +1300,7 @@ class width_datacardClass:
                 ROOT.RooArgList(bkgRates_PDFDown, thetaSyst_djet_ggZZ_norm)
                 )
 
-        
+
 
         ggZZVarNorm_Name = "ggZZVarNominalNorm_{0:.0f}_{1:.0f}_{2:.0f}".format(self.channel, self.sqrts, useDjet)
         ggZZNominal_norm = ROOT.RooFormulaVar(
@@ -1442,7 +1445,7 @@ class width_datacardClass:
 
 
 #------------- VBF Opposite Djet --------------#
-        
+
         VBFsigRateUpName_OppositeDjet = "signal_VBFUp_OppositeDjet_rate_{0:.0f}_{1:.0f}_{2:.0f}".format(self.channel, self.sqrts, useDjet)
         VBFbkgRateUpName_OppositeDjet = "bkg_VBFUp_OppositeDjet_rate_{0:.0f}_{1:.0f}_{2:.0f}".format(self.channel, self.sqrts, useDjet)
         VBFinterfRateUpName_OppositeDjet = "interf_VBFUp_OppositeDjet_rate_{0:.0f}_{1:.0f}_{2:.0f}".format(self.channel, self.sqrts, useDjet)
@@ -1547,7 +1550,7 @@ class width_datacardClass:
         VBFsigRateNominal_mZZ2_4_Name_OppositeDjet = "signal_VBFNominal_OppositeDjet_rate_mZZ2_4_{0:.0f}_{1:.0f}_{2:.0f}".format(self.channel, self.sqrts, useDjet)
         VBFsigRates_mZZ2_4_Nominal_OppositeDjet = ROOT.RooRealVar(VBFsigRateNominal_mZZ2_4_Name_OppositeDjet, VBFsigRateNominal_mZZ2_4_Name_OppositeDjet, integral_VBF_T_mZZ2_4_2_OppositeDjet)
         VBFsigRates_mZZ2_4_Nominal_OppositeDjet.setConstant(True)
-        
+
 
 # VBF anomalous coupling rate parameterizations
 
@@ -1629,8 +1632,8 @@ class width_datacardClass:
             "( (1-abs(@3))*@0 + sign(@3)*sqrt(abs(@3)*(1-abs(@3)))*@1 + abs(@3)*@2 )",
             ROOT.RooArgList(VBFinterfRates_Down_OppositeDjet,VBFinterfRates_mZZ2_1_Down_OppositeDjet,VBFinterfRates_mZZ2_2_Down_OppositeDjet, fai1)
             )
-        
-        
+
+
 #------- Combined VBF Djet ----------------#
 
         VBFsigRates_Nominal_AnomCoupl_CombinedJet_Name = "signal_VBFNominal_CombinedJet_rate_AnomCoupl_{0:.0f}_{1:.0f}_{2:.0f}".format(self.channel, self.sqrts, useDjet)
@@ -1791,18 +1794,18 @@ class width_datacardClass:
 
         VBFVarNormNominal_Name = "VBFVarNominalNorm_{0:.0f}_{1:.0f}_{2:.0f}".format(self.channel, self.sqrts, useDjet)
         VBFNominal_norm = ROOT.RooFormulaVar(
-            VBFVarNormNominal_Name, "(@0*@3*@5*@4+@1*sqrt(@3*@5*@4)+@2)",
-            ROOT.RooArgList(VBFsigRates_Nominal_AnomCoupl_CombinedJet, VBFinterfRates_Nominal_AnomCoupl_CombinedJet, VBFbkgRates_Nominal_CombinedJet, x, mu, muV)
+            VBFVarNormNominal_Name, "(@0*@3*@5*@4+@1*sqrt(@3*@5*@4*abs(@6))*sign(@6)+@2*abs(@6))",
+            ROOT.RooArgList(VBFsigRates_Nominal_AnomCoupl_CombinedJet, VBFinterfRates_Nominal_AnomCoupl_CombinedJet, VBFbkgRates_Nominal_CombinedJet, x, mu, muV, VBFkbkg)
             )
         VBFVarNormUp_Name = "VBFVarUpNorm_{0:.0f}_{1:.0f}_{2:.0f}".format(self.channel, self.sqrts, useDjet)
         VBFUp_norm = ROOT.RooFormulaVar(
-            VBFVarNormUp_Name, "(@0*@3*@5*@4+@1*sqrt(@3*@5*@4)+@2)",
-            ROOT.RooArgList(VBFsigRates_Up_AnomCoupl_CombinedJet, VBFinterfRates_Up_AnomCoupl_CombinedJet, VBFbkgRates_Up_CombinedJet, x, mu, muV)
+            VBFVarNormUp_Name, "(@0*@3*@5*@4+@1*sqrt(@3*@5*@4*abs(@6))*sign(@6)+@2*abs(@6))",
+            ROOT.RooArgList(VBFsigRates_Up_AnomCoupl_CombinedJet, VBFinterfRates_Up_AnomCoupl_CombinedJet, VBFbkgRates_Up_CombinedJet, x, mu, muV, VBFkbkg)
             )
         VBFVarNormDown_Name = "VBFVarDownNorm_{0:.0f}_{1:.0f}_{2:.0f}".format(self.channel, self.sqrts, useDjet)
         VBFDown_norm = ROOT.RooFormulaVar(
-            VBFVarNormDown_Name, "(@0*@3*@5*@4+@1*sqrt(@3*@5*@4)+@2)",
-            ROOT.RooArgList(VBFsigRates_Down_AnomCoupl_CombinedJet, VBFinterfRates_Down_AnomCoupl_CombinedJet, VBFbkgRates_Down_CombinedJet, x, mu, muV)
+            VBFVarNormDown_Name, "(@0*@3*@5*@4+@1*sqrt(@3*@5*@4*abs(@6))*sign(@6)+@2*abs(@6))",
+            ROOT.RooArgList(VBFsigRates_Down_AnomCoupl_CombinedJet, VBFinterfRates_Down_AnomCoupl_CombinedJet, VBFbkgRates_Down_CombinedJet, x, mu, muV, VBFkbkg)
             )
 
 
@@ -2385,7 +2388,7 @@ class width_datacardClass:
         MorphNormList_ggZZ.add(ggZZQCDUp_norm)
         MorphNormList_ggZZ.add(ggZZQCDDown_norm)
         MorphNormList_ggZZ.add(ggZZPDFUp_norm)
-        MorphNormList_ggZZ.add(ggZZPDFDown_norm)     
+        MorphNormList_ggZZ.add(ggZZPDFDown_norm)
 
 
 #        asympowname = "Asympow_ggZZ_QCD_{0:.0f}_{1:.0f}_{2:.0f}".format(self.channel, self.sqrts, useDjet)
@@ -2445,14 +2448,14 @@ class width_datacardClass:
 
 
         VBFbkgRateNameNorm = "bkgNorm_VBFrate"
-        VBFbkgRatesNorm = ROOT.RooRealVar(VBFbkgRateNameNorm, VBFbkgRateNameNorm, 1.0)
-        VBFbkgRatesNorm.setConstant(True)
+        VBFbkgRatesNorm = ROOT.RooFormulaVar(VBFbkgRateNameNorm, "@0", ROOT.RooArgList(VBFkbkg))
+#        VBFbkgRatesNorm.setConstant(True)
 
         VBFsigRateNameWidthNorm = "signalWidthNorm_VBFrate"
         VBFinterfRateNameWidthNorm = "interfWidthNorm_VBFrate"
 
         VBFsigRatesWidthNorm = ROOT.RooFormulaVar(VBFsigRateNameWidthNorm, "@0*@1*@2", ROOT.RooArgList(x, mu, muV))
-        VBFinterfRatesWidthNorm = ROOT.RooFormulaVar(VBFinterfRateNameWidthNorm, "sqrt(@0*@1*@2)", ROOT.RooArgList(x, mu, muV))
+        VBFinterfRatesWidthNorm = ROOT.RooFormulaVar(VBFinterfRateNameWidthNorm, "sqrt(@0*@1*@2*abs(@3))*sign(@3)", ROOT.RooArgList(x, mu, muV,VBFkbkg))
 
 
 # VBF Bkg histfunc construction
@@ -2696,8 +2699,7 @@ class width_datacardClass:
         )
 
 
-        CMS_zz4l_VBFscale_syst = ROOT.RooRealVar("CMS_zz4l_VBFscale_syst", "CMS_zz4l_VBFscale_syst", 0.0, -1, 1)
-        CMS_zz4l_VBFscale_syst.setConstant(True) #NOTE THIS IS KILLING THIS SYSTEMATIC
+        CMS_zz4l_VBFscale_syst = w.factory("pdf_qqbar[-7,7]")
         morphVarListVBF = ROOT.RooArgList()
         morphVarListVBF.add(CMS_zz4l_VBFscale_syst)
         MorphList_VBF = ROOT.RooArgList()
@@ -2993,21 +2995,31 @@ class width_datacardClass:
         bkg_qqzz_EWKcorrDown_Norm_Name = "bkg_qqzz_widthmass_EWKcorrDownNorm_{0:.0f}_{1:.0f}_{2:.0f}".format(self.channel, self.sqrts, useDjet)
         bkg_qqzz_EWKcorrDown_Norm = ROOT.RooRealVar(bkg_qqzz_EWKcorrDown_Norm_Name, bkg_qqzz_EWKcorrDown_Norm_Name, bkg_qqzz_EWKcorrDown_NormVal)
 
+#        qqZZ_PDF_error
+        bkg_qqzz_PDFUp_Norm_Name = "bkg_qqzz_widthmass_PDFUpNorm_{0:.0f}".format(self.sqrts)
+        bkg_qqzz_PDFUp_Norm = ROOT.RooRealVar(bkg_qqzz_PDFUp_Norm_Name, bkg_qqzz_PDFUp_Norm_Name, qqZZ_PDF_error)
+        bkg_qqzz_PDFDown_Norm_Name = "bkg_qqzz_widthmass_PDFDownNorm_{0:.0f}".format(self.sqrts)
+        bkg_qqzz_PDFDown_Norm = ROOT.RooRealVar(bkg_qqzz_PDFDown_Norm_Name, bkg_qqzz_PDFDown_Norm_Name, (2.-qqZZ_PDF_error))
+
+
         morphVarListqqZZ_norm = ROOT.RooArgList()
         MorphNormList_qqZZ_norm = ROOT.RooArgList()
         morphVarListqqZZ_norm.add(qqZZ_Scale_Syst)
         morphVarListqqZZ_norm.add(qqZZ_EWK_Syst)
+        morphVarListqqZZ_norm.add(CMS_zz4l_VBFscale_syst)
         MorphNormList_qqZZ_norm.add(bkg_qqzz_Nominal_Norm)
         MorphNormList_qqZZ_norm.add(bkg_qqzz_QCDScaleUp_Norm)
         MorphNormList_qqZZ_norm.add(bkg_qqzz_QCDScaleDown_Norm)
         MorphNormList_qqZZ_norm.add(bkg_qqzz_EWKcorrUp_Norm)
         MorphNormList_qqZZ_norm.add(bkg_qqzz_EWKcorrDown_Norm)
-        asympowname = "Asymquad_qqZZ_QCD_EWK_{0:.0f}_{1:.0f}_{2:.0f}".format(self.channel, self.sqrts, useDjet)
+        MorphNormList_qqZZ_norm.add(bkg_qqzz_PDFUp_Norm)
+        MorphNormList_qqZZ_norm.add(bkg_qqzz_PDFDown_Norm)
+        asympowname = "Asymquad_qqZZ_QCD_EWK_PDF_{0:.0f}_{1:.0f}_{2:.0f}".format(self.channel, self.sqrts, useDjet)
         if useDjet!=0:
             morphVarListqqZZ_norm.add(CMS_zz4l_qqzz_djet_syst)
             MorphNormList_qqZZ_norm.add(bkg_qqzz_DjetUp_Norm)
             MorphNormList_qqZZ_norm.add(bkg_qqzz_DjetDown_Norm)
-            asympowname = "Asymquad_qqZZ_Djet_QCD_EWK_{0:.0f}_{1:.0f}_{2:.0f}".format(self.channel, self.sqrts, useDjet)
+            asympowname = "Asymquad_qqZZ_Djet_QCD_EWK_PDF_{0:.0f}_{1:.0f}_{2:.0f}".format(self.channel, self.sqrts, useDjet)
         thetaSyst_combined_qqZZ_norm = ROOT.AsymQuad(asympowname, asympowname, MorphNormList_qqZZ_norm, morphVarListqqZZ_norm, 1.0)
         bkg_qqzz_norm = ROOT.RooFormulaVar("bkg_qqzz_norm", "TMath::Max(@0,1e-15)", ROOT.RooArgList(thetaSyst_combined_qqZZ_norm))
 
@@ -3017,6 +3029,8 @@ class width_datacardClass:
             print "bkg_qqZZ_QCD Dn Ratio:",bkg_qqzz_QCDScaleDown_Norm.getVal()
             print "bkg_qqZZ_EWK Up Ratio:",bkg_qqzz_EWKcorrUp_Norm.getVal()
             print "bkg_qqZZ_EWK Dn Ratio:",bkg_qqzz_EWKcorrDown_Norm.getVal()
+            print "bkg_qqZZ_PDF Up Ratio:",bkg_qqzz_PDFUp_Norm.getVal()
+            print "bkg_qqZZ_PDF Dn Ratio:",bkg_qqzz_PDFDown_Norm.getVal()
             print "bkg_qqZZ_Djet Up Ratio:",bkg_qqzz_DjetUp_Norm.getVal()
             print "bkg_qqZZ_Djet Dn Ratio:",bkg_qqzz_DjetDown_Norm.getVal()
 
@@ -3193,7 +3207,7 @@ class width_datacardClass:
             print "norm 2p2f 4e: ", nlZjet_2p2f.getVal()
             print "pol0 2p2f 4e: ", p0Zjet_2p2f.getVal()
             print "pol1 2p2f 4e: ", p1Zjet_2p2f.getVal()
-            bkg_zjets_2p2f = ROOT.RooGenericPdf("bkg_zjetsTmp_width_2p2f_{0:.0f}_{1:.0f}_{2:.0f}".format(self.channel, self.sqrts, useDjet), "bkg_zjetsTmp_2p2f", "(TMath::Landau(@0,@1,@2))*(1.+ TMath::Exp(@3+@4*@0))", RooArgList(
+            bkg_zjets_2p2f = ROOT.RooGenericPdf("bkg_zjetsTmp_width_2p2f_{0:.0f}_{1:.0f}_{2:.0f}".format(self.channel, self.sqrts, useDjet), "bkg_zjetsTmp_2p2f", "(TMath::Landau(@0,@1,@2))*(1.+ TMath::Exp(@3+@4*@0))", ROOT.RooArgList(
                 CMS_zz4l_widthMass, mlZjet_2p2f, slZjet_2p2f, p0Zjet_2p2f, p1Zjet_2p2f))
 
             name = "mlZjet_width_3p1f_{0:.0f}_{1:.0f}_{2:.0f}".format(
@@ -3250,7 +3264,7 @@ class width_datacardClass:
             print "norm 2p2f 2mu2e: ",nlZjet_2p2f.getVal()
             print "pol0 2p2f 2mu2e: ",p0Zjet_2p2f.getVal()
             print "pol1 2p2f 2mu2e: ",p1Zjet_2p2f.getVal()
-            bkg_zjets_2p2f = ROOT.RooGenericPdf("bkg_zjetsTmp_width_2p2f","bkg_zjetsTmp_2p2f","(TMath::Landau(@0,@1,@2))*(1.+ TMath::Exp(@3+@4*@0))",RooArgList(CMS_zz4l_widthMass,mlZjet_2p2f,slZjet_2p2f,p0Zjet_2p2f,p1Zjet_2p2f))
+            bkg_zjets_2p2f = ROOT.RooGenericPdf("bkg_zjetsTmp_width_2p2f","bkg_zjetsTmp_2p2f","(TMath::Landau(@0,@1,@2))*(1.+ TMath::Exp(@3+@4*@0))",ROOT.RooArgList(CMS_zz4l_widthMass,mlZjet_2p2f,slZjet_2p2f,p0Zjet_2p2f,p1Zjet_2p2f))
 
             name = "mlZjet_width_2p2f_2_{0:.0f}_{1:.0f}_{2:.0f}".format(
                 self.channel, self.sqrts, useDjet)
@@ -3302,7 +3316,7 @@ class width_datacardClass:
         DataName = "ZX_FullDataHist_{0:.0f}_{1:.0f}_{2:.0f}".format(
             self.channel, self.sqrts, useDjet)
         PdfName = "ZX_FullPdf_{0:.0f}_{1:.0f}_{2:.0f}".format(self.channel, self.sqrts, useDjet)
-        zjet_DataHistNominal = RooDataHist(
+        zjet_DataHistNominal = ROOT.RooDataHist(
             DataName, DataName, ROOT.RooArgList(
                 CMS_zz4l_widthMass, CMS_zz4l_widthKD),
             bkg_zjets_Nominal.createHistogram("{0},{1}".format(CMS_zz4l_widthMass.GetName(), CMS_zz4l_widthKD.GetName())))
@@ -3313,7 +3327,7 @@ class width_datacardClass:
             self.channel, self.sqrts, useDjet)
         PdfName = "ZX_FullPdf_Up_{0:.0f}_{1:.0f}_{2:.0f}".format(
             self.channel, self.sqrts, useDjet)
-        zjet_DataHistUp = RooDataHist(
+        zjet_DataHistUp = ROOT.RooDataHist(
             DataName, DataName, ROOT.RooArgList(
                 CMS_zz4l_widthMass, CMS_zz4l_widthKD),
             bkg_zjets_Up.createHistogram("{0},{1}".format(CMS_zz4l_widthMass.GetName(), CMS_zz4l_widthKD.GetName())))
@@ -3324,7 +3338,7 @@ class width_datacardClass:
             self.channel, self.sqrts, useDjet)
         PdfName = "ZX_FullPdf_Down_{0:.0f}_{1:.0f}_{2:.0f}".format(
             self.channel, self.sqrts, useDjet)
-        zjet_DataHistDown = RooDataHist(
+        zjet_DataHistDown = ROOT.RooDataHist(
             DataName, DataName, ROOT.RooArgList(
                 CMS_zz4l_widthMass, CMS_zz4l_widthKD),
             bkg_zjets_Down.createHistogram("{0},{1}".format(CMS_zz4l_widthMass.GetName(), CMS_zz4l_widthKD.GetName())))
@@ -3409,7 +3423,7 @@ class width_datacardClass:
             histo.Draw()
             intpdftmp = ggZZpdf_Nominal.createIntegral(ROOT.RooArgSet(CMS_zz4l_widthMass,CMS_zz4l_widthKD))
             histo2 = intpdftmp.createHistogram("mytemp",x)
-            histo2.SetLineColor(kRed)
+            histo2.SetLineColor(ROOT.kRed)
             histo2.Draw("same")
             histo2.Scale(histo.Integral()/histo2.Integral())
 #            canvasfullName = "{0}/figs/{1}.root".format(self.outputDir, canvasname)
@@ -3496,10 +3510,10 @@ class width_datacardClass:
             histo = ggZZpdf_norm.createHistogram("htemp",CMS_zz4l_APscale_syst)
             histo.SetLineWidth(2)
             histo2 = histo.Clone("mytemp")
-            histo2.SetLineColor(kRed)
+            histo2.SetLineColor(ROOT.kRed)
             histo2.SetLineStyle(7)
             histo3 = histo.Clone("mytemp")
-            histo3.SetLineColor(kBlue)
+            histo3.SetLineColor(ROOT.kBlue)
             histo3.SetLineStyle(2)
             for bin in range(1,histo2.GetNbinsX()+1):
                 CMS_zz4l_APscale_syst.setVal(histo2.GetBinCenter(bin))
@@ -3527,10 +3541,10 @@ class width_datacardClass:
             histo = ggZZpdf_norm.createHistogram("htemp",CMS_zz4l_pdf_gg_syst)
             histo.SetLineWidth(2)
             histo2 = histo.Clone("mytemp")
-            histo2.SetLineColor(kRed)
+            histo2.SetLineColor(ROOT.kRed)
             histo2.SetLineStyle(7)
             histo3 = histo.Clone("mytemp")
-            histo3.SetLineColor(kBlue)
+            histo3.SetLineColor(ROOT.kBlue)
             histo3.SetLineStyle(2)
             for bin in range(1,histo2.GetNbinsX()+1):
                 CMS_zz4l_pdf_gg_syst.setVal(histo2.GetBinCenter(bin))
@@ -3558,10 +3572,10 @@ class width_datacardClass:
             histo = VBFpdf_norm.createHistogram("htemp",CMS_zz4l_VBFscale_syst)
             histo.SetLineWidth(2)
             histo2 = histo.Clone("mytemp")
-            histo2.SetLineColor(kRed)
+            histo2.SetLineColor(ROOT.kRed)
             histo2.SetLineStyle(7)
             histo3 = histo.Clone("mytemp")
-            histo3.SetLineColor(kBlue)
+            histo3.SetLineColor(ROOT.kBlue)
             histo3.SetLineStyle(2)
             for bin in range(1,histo2.GetNbinsX()+1):
                 CMS_zz4l_VBFscale_syst.setVal(histo2.GetBinCenter(bin))
@@ -3593,17 +3607,17 @@ class width_datacardClass:
             histo.Draw()
             histo2 = Sig_T_1_Up_QCD.Clone("mytemp1")
             histo2.Add(Sig_T_2_Up_QCD.Clone("mytemp2"),10)
-            histo2.Add(Sig_T_4_Up_QCD.Clone("mytemp3"),sqrt(10))
+            histo2.Add(Sig_T_4_Up_QCD.Clone("mytemp3"),math.sqrt(10))
             histo2 = histo2.ProjectionX()
-            histo2.SetLineColor(kRed)
-            histo2.SetMarkerColor(kRed)
+            histo2.SetLineColor(ROOT.kRed)
+            histo2.SetMarkerColor(ROOT.kRed)
             histo2.Draw("same")
             histo2.Scale(histo.Integral()/histo2.Integral())
             CMS_zz4l_APscale_syst.setVal(1)
             histo3 = ggZZpdf.createProjection(ROOT.RooArgSet(CMS_zz4l_widthKD)).createHistogram("htempfull",CMS_zz4l_widthMass)
             histo3.SetLineWidth(2)
             histo3.SetLineStyle(2)
-            histo3.SetLineColor(kBlue)
+            histo3.SetLineColor(ROOT.kBlue)
             histo3.Scale(histo.Integral()/histo3.Integral())
             histo3.Draw("same")
             testhandle.WriteTObject(ctest)
@@ -3622,17 +3636,17 @@ class width_datacardClass:
             histo.Draw()
             histo2 = Sig_T_1_Down_QCD.Clone("mytemp1")
             histo2.Add(Sig_T_2_Down_QCD.Clone("mytemp2"),10)
-            histo2.Add(Sig_T_4_Down_QCD.Clone("mytemp3"),sqrt(10))
+            histo2.Add(Sig_T_4_Down_QCD.Clone("mytemp3"),math.sqrt(10))
             histo2 = histo2.ProjectionX()
-            histo2.SetLineColor(kRed)
-            histo2.SetMarkerColor(kRed)
+            histo2.SetLineColor(ROOT.kRed)
+            histo2.SetMarkerColor(ROOT.kRed)
             histo2.Draw("same")
             histo2.Scale(histo.Integral()/histo2.Integral())
             CMS_zz4l_APscale_syst.setVal(-1)
             histo3 = ggZZpdf.createProjection(ROOT.RooArgSet(CMS_zz4l_widthKD)).createHistogram("htempfull",CMS_zz4l_widthMass)
             histo3.SetLineWidth(2)
             histo3.SetLineStyle(2)
-            histo3.SetLineColor(kBlue)
+            histo3.SetLineColor(ROOT.kBlue)
 #            histo3.Scale(histo.Integral()/histo3.Integral())
             histo3.Draw("same")
             testhandle.WriteTObject(ctest)
@@ -3651,17 +3665,17 @@ class width_datacardClass:
             histo.Draw()
             histo2 = Sig_T_1_Up_PDF.Clone("mytemp1")
             histo2.Add(Sig_T_2_Up_PDF.Clone("mytemp2"),10)
-            histo2.Add(Sig_T_4_Up_PDF.Clone("mytemp3"),sqrt(10))
+            histo2.Add(Sig_T_4_Up_PDF.Clone("mytemp3"),math.sqrt(10))
             histo2 = histo2.ProjectionX()
-            histo2.SetLineColor(kRed)
-            histo2.SetMarkerColor(kRed)
+            histo2.SetLineColor(ROOT.kRed)
+            histo2.SetMarkerColor(ROOT.kRed)
             histo2.Draw("same")
             histo2.Scale(histo.Integral()/histo2.Integral())
             CMS_zz4l_pdf_gg_syst.setVal(1)
             histo3 = ggZZpdf.createProjection(ROOT.RooArgSet(CMS_zz4l_widthKD)).createHistogram("htempfull",CMS_zz4l_widthMass)
             histo3.SetLineWidth(2)
             histo3.SetLineStyle(2)
-            histo3.SetLineColor(kBlue)
+            histo3.SetLineColor(ROOT.kBlue)
             histo3.Scale(histo.Integral()/histo3.Integral())
             histo3.Draw("same")
             testhandle.WriteTObject(ctest)
@@ -3680,17 +3694,17 @@ class width_datacardClass:
             histo.Draw()
             histo2 = Sig_T_1_Down_PDF.Clone("mytemp1")
             histo2.Add(Sig_T_2_Down_PDF.Clone("mytemp2"),10)
-            histo2.Add(Sig_T_4_Down_PDF.Clone("mytemp3"),sqrt(10))
+            histo2.Add(Sig_T_4_Down_PDF.Clone("mytemp3"),math.sqrt(10))
             histo2 = histo2.ProjectionX()
-            histo2.SetLineColor(kRed)
-            histo2.SetMarkerColor(kRed)
+            histo2.SetLineColor(ROOT.kRed)
+            histo2.SetMarkerColor(ROOT.kRed)
             histo2.Draw("same")
             histo2.Scale(histo.Integral()/histo2.Integral())
             CMS_zz4l_pdf_gg_syst.setVal(-1)
             histo3 = ggZZpdf.createProjection(ROOT.RooArgSet(CMS_zz4l_widthKD)).createHistogram("htempfull",CMS_zz4l_widthMass)
             histo3.SetLineWidth(2)
             histo3.SetLineStyle(2)
-            histo3.SetLineColor(kBlue)
+            histo3.SetLineColor(ROOT.kBlue)
 #            histo3.Scale(histo.Integral()/histo3.Integral())
             histo3.Draw("same")
             testhandle.WriteTObject(ctest)
@@ -3709,16 +3723,16 @@ class width_datacardClass:
             histo.Draw()
             histo2 = Sig_T_1.Clone("mytemp1")
             histo2.Add(Sig_T_2.Clone("mytemp2"),10)
-            histo2.Add(Sig_T_4.Clone("mytemp3"),sqrt(10))
+            histo2.Add(Sig_T_4.Clone("mytemp3"),math.sqrt(10))
             histo2 = histo2.ProjectionX()
-            histo2.SetLineColor(kRed)
-            histo2.SetMarkerColor(kRed)
+            histo2.SetLineColor(ROOT.kRed)
+            histo2.SetMarkerColor(ROOT.kRed)
             histo2.Draw("same")
             histo2.Scale(histo.Integral()/histo2.Integral())
             histo3 = ggZZpdf.createProjection(ROOT.RooArgSet(CMS_zz4l_widthKD)).createHistogram("htempfull",CMS_zz4l_widthMass)
             histo3.SetLineWidth(2)
             histo3.SetLineStyle(2)
-            histo3.SetLineColor(kBlue)
+            histo3.SetLineColor(ROOT.kBlue)
             histo3.Scale(histo.Integral()/histo3.Integral())
             histo3.Draw("same")
             testhandle.WriteTObject(ctest)
@@ -3736,17 +3750,17 @@ class width_datacardClass:
             histo.Draw()
             histo2 = VBF_T_1_Up.Clone("mytemp1")
             histo2.Add(VBF_T_2_Up.Clone("mytemp2"),10)
-            histo2.Add(VBF_T_4_Up.Clone("mytemp3"),sqrt(10))
+            histo2.Add(VBF_T_4_Up.Clone("mytemp3"),math.sqrt(10))
             histo2 = histo2.ProjectionX()
-            histo2.SetLineColor(kRed)
-            histo2.SetMarkerColor(kRed)
+            histo2.SetLineColor(ROOT.kRed)
+            histo2.SetMarkerColor(ROOT.kRed)
             histo2.Draw("same")
             histo2.Scale(histo.Integral()/histo2.Integral())
             CMS_zz4l_VBFscale_syst.setVal(1)
             histo3 = VBFpdf.createProjection(ROOT.RooArgSet(CMS_zz4l_widthKD)).createHistogram("htempfull",CMS_zz4l_widthMass)
             histo3.SetLineWidth(2)
             histo3.SetLineStyle(2)
-            histo3.SetLineColor(kBlue)
+            histo3.SetLineColor(ROOT.kBlue)
             histo3.Scale(histo.Integral()/histo3.Integral())
             histo3.Draw("same")
             testhandle.WriteTObject(ctest)
@@ -3765,17 +3779,17 @@ class width_datacardClass:
             histo.Draw()
             histo2 = VBF_T_1_Down.Clone("mytemp1")
             histo2.Add(VBF_T_2_Down.Clone("mytemp2"),10)
-            histo2.Add(VBF_T_4_Down.Clone("mytemp3"),sqrt(10))
+            histo2.Add(VBF_T_4_Down.Clone("mytemp3"),math.sqrt(10))
             histo2 = histo2.ProjectionX()
-            histo2.SetLineColor(kRed)
-            histo2.SetMarkerColor(kRed)
+            histo2.SetLineColor(ROOT.kRed)
+            histo2.SetMarkerColor(ROOT.kRed)
             histo2.Draw("same")
             histo2.Scale(histo.Integral()/histo2.Integral())
             CMS_zz4l_VBFscale_syst.setVal(-1)
             histo3 = VBFpdf.createProjection(ROOT.RooArgSet(CMS_zz4l_widthKD)).createHistogram("htempfull",CMS_zz4l_widthMass)
             histo3.SetLineWidth(2)
             histo3.SetLineStyle(2)
-            histo3.SetLineColor(kBlue)
+            histo3.SetLineColor(ROOT.kBlue)
 #            histo3.Scale(histo.Integral()/histo3.Integral())
             histo3.Draw("same")
             testhandle.WriteTObject(ctest)
@@ -3794,16 +3808,16 @@ class width_datacardClass:
             histo.Draw()
             histo2 = VBF_T_1.Clone("mytemp1")
             histo2.Add(VBF_T_2.Clone("mytemp2"),10)
-            histo2.Add(VBF_T_4.Clone("mytemp3"),sqrt(10))
+            histo2.Add(VBF_T_4.Clone("mytemp3"),math.sqrt(10))
             histo2 = histo2.ProjectionX()
-            histo2.SetLineColor(kRed)
-            histo2.SetMarkerColor(kRed)
+            histo2.SetLineColor(ROOT.kRed)
+            histo2.SetMarkerColor(ROOT.kRed)
             histo2.Draw("same")
             histo2.Scale(histo.Integral()/histo2.Integral())
             histo3 = VBFpdf.createProjection(ROOT.RooArgSet(CMS_zz4l_widthKD)).createHistogram("htempfull",CMS_zz4l_widthMass)
             histo3.SetLineWidth(2)
             histo3.SetLineStyle(2)
-            histo3.SetLineColor(kBlue)
+            histo3.SetLineColor(ROOT.kBlue)
             histo3.Scale(histo.Integral()/histo3.Integral())
             histo3.Draw("same")
             testhandle.WriteTObject(ctest)
@@ -3820,11 +3834,11 @@ class width_datacardClass:
             histo2 = histo.Clone("htemp_Up")
             histo2.SetLineWidth(2)
             histo2.SetLineStyle(7)
-            histo2.SetLineColor(kRed)
+            histo2.SetLineColor(ROOT.kRed)
             histo3 = histo.Clone("htemp_Dn")
             histo3.SetLineWidth(2)
             histo3.SetLineStyle(2)
-            histo3.SetLineColor(kBlue)
+            histo3.SetLineColor(ROOT.kBlue)
             for bin in range(1,histo.GetNbinsX()+1):
                 qqZZ_Scale_Syst.setVal(0)
                 CMS_zz4l_widthMass.setVal(histo.GetBinCenter(bin))
@@ -3853,11 +3867,11 @@ class width_datacardClass:
             histo2 = histo.Clone("htemp_Up")
             histo2.SetLineWidth(2)
             histo2.SetLineStyle(7)
-            histo2.SetLineColor(kRed)
+            histo2.SetLineColor(ROOT.kRed)
             histo3 = histo.Clone("htemp_Dn")
             histo3.SetLineWidth(2)
             histo3.SetLineStyle(2)
-            histo3.SetLineColor(kBlue)
+            histo3.SetLineColor(ROOT.kBlue)
             for bin in range(1,histo.GetNbinsX()+1):
                 qqZZ_EWK_Syst.setVal(0)
                 CMS_zz4l_widthMass.setVal(histo.GetBinCenter(bin))
@@ -3885,11 +3899,11 @@ class width_datacardClass:
             histo2 = histo.Clone("htemp_Up")
             histo2.SetLineWidth(2)
             histo2.SetLineStyle(7)
-            histo2.SetLineColor(kRed)
+            histo2.SetLineColor(ROOT.kRed)
             histo3 = histo.Clone("htemp_Dn")
             histo3.SetLineWidth(2)
             histo3.SetLineStyle(2)
-            histo3.SetLineColor(kBlue)
+            histo3.SetLineColor(ROOT.kBlue)
             for bin in range(1,histo.GetNbinsX()+1):
                 CMS_zz4l_qqzz_djet_syst.setVal(0)
                 bincenter = histo.GetBinCenter(bin)
@@ -3922,11 +3936,11 @@ class width_datacardClass:
             histo2 = histo.Clone("htemp_Up")
             histo2.SetLineWidth(2)
             histo2.SetLineStyle(7)
-            histo2.SetLineColor(kRed)
+            histo2.SetLineColor(ROOT.kRed)
             histo3 = histo.Clone("htemp_Dn")
             histo3.SetLineWidth(2)
             histo3.SetLineStyle(7)
-            histo3.SetLineColor(kBlue)
+            histo3.SetLineColor(ROOT.kBlue)
             for bin in range(1,histo.GetNbinsX()+1):
                 qqZZ_EWK_Syst.setVal(0)
                 CMS_zz4l_widthMass.setVal(histo.GetBinCenter(bin))
@@ -3942,11 +3956,11 @@ class width_datacardClass:
             histon2 = histon.Clone("htempn_Up")
             histon2.SetLineWidth(2)
             histon2.SetLineStyle(2)
-            histon2.SetLineColor(kRed)
+            histon2.SetLineColor(ROOT.kRed)
             histon3 = histon.Clone("htempn_Dn")
             histon3.SetLineWidth(2)
             histon3.SetLineStyle(2)
-            histon3.SetLineColor(kBlue)
+            histon3.SetLineColor(ROOT.kBlue)
             for bin in range(1,histon.GetNbinsX()+1):
 #                CMS_qqzzbkg_EWK_p0
 #                CMS_qqzzbkg_EWK_p1
@@ -3983,11 +3997,11 @@ class width_datacardClass:
             histo2 = histo.Clone("htemp_Up")
             histo2.SetLineWidth(2)
             histo2.SetLineStyle(7)
-            histo2.SetLineColor(kRed)
+            histo2.SetLineColor(ROOT.kRed)
             histo3 = histo.Clone("htemp_Dn")
             histo3.SetLineWidth(2)
             histo3.SetLineStyle(7)
-            histo3.SetLineColor(kBlue)
+            histo3.SetLineColor(ROOT.kBlue)
             for bin in range(1,histo.GetNbinsX()+1):
                 qqZZ_Scale_Syst.setVal(0)
                 CMS_zz4l_widthMass.setVal(histo.GetBinCenter(bin))
@@ -4003,11 +4017,11 @@ class width_datacardClass:
             histon2 = histon.Clone("htempn_Up")
             histon2.SetLineWidth(2)
             histon2.SetLineStyle(2)
-            histon2.SetLineColor(kRed)
+            histon2.SetLineColor(ROOT.kRed)
             histon3 = histon.Clone("htempn_Dn")
             histon3.SetLineWidth(2)
             histon3.SetLineStyle(2)
-            histon3.SetLineColor(kBlue)
+            histon3.SetLineColor(ROOT.kBlue)
             for bin in range(1,histon.GetNbinsX()+1):
                 bincenter = histon.GetXaxis().GetBinCenter(bin)
                 bincontent = histo.GetBinContent(bin)
@@ -4148,12 +4162,12 @@ class width_datacardClass:
         if(DEBUG):
             print name_Shape, "  ", name_ShapeWS2
 
-        w.importClassCode(AsymPow.Class(),True)
-        w.importClassCode(AsymQuad.Class(),True)
-        w.importClassCode(RooqqZZPdf_v2.Class(), True)
-        w.importClassCode(RooFormulaVar.Class(), True)
-        w.importClassCode(RooRealFlooredSumPdf.Class(),True)
-        w.importClassCode(VerticalInterpPdf.Class(),True)
+        w.importClassCode(ROOT.AsymPow.Class(),True)
+        w.importClassCode(ROOT.AsymQuad.Class(),True)
+        w.importClassCode(ROOT.RooqqZZPdf_v2.Class(), True)
+        w.importClassCode(ROOT.RooFormulaVar.Class(), True)
+        w.importClassCode(ROOT.RooRealFlooredSumPdf.Class(),True)
+        w.importClassCode(ROOT.VerticalInterpPdf.Class(),True)
 
         getattr(w, 'import')(data_obs_red, ROOT.RooFit.Rename("data_obs"))
 
@@ -4161,6 +4175,7 @@ class width_datacardClass:
         getattr(w, 'import')(self.LUMI, ROOT.RooFit.RecycleConflictNodes())
         getattr(w, 'import')(x, ROOT.RooFit.RecycleConflictNodes())
         getattr(w, 'import')(kbkg, ROOT.RooFit.RecycleConflictNodes())
+        getattr(w, 'import')(VBFkbkg, ROOT.RooFit.RecycleConflictNodes())
         getattr(w, 'import')(mu, ROOT.RooFit.RecycleConflictNodes())
         getattr(w, 'import')(muV, ROOT.RooFit.RecycleConflictNodes())
         getattr(w, 'import')(muF, ROOT.RooFit.RecycleConflictNodes())

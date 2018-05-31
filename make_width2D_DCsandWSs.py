@@ -1,21 +1,11 @@
 #!/usr/bin/python
-#-----------------------------------------------
-# Latest update: 2012.08.30
-# by Matt Snowball
-#-----------------------------------------------
-import sys
-import os
-import pwd
-import commands
+
+import sys, os, commands
 import optparse
-import shlex
-import re
-import math
-from ROOT import *
 import ROOT
 from array import array
-from width_datacardClass2DNew import *
-from inputReader import *
+from width_datacardClass2DNew import width_datacardClass
+from inputReader import inputReader
 
 # define function for parsing options
 

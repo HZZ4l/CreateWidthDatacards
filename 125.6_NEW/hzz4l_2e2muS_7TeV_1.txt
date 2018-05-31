@@ -38,4 +38,3 @@ CMS_zz4l_mean_e_sig param 0.0 1.0
 CMS_zz4l_sigma_m_sig param 0.0 0.2 
 CMS_zz4l_sigma_e_sig param 0.0 0.2 
 CMS_zz4l_n_sig_3_7 param 0.0 0.05 
-interf_ggH param 0 1 [-1,1] 
